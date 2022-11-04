@@ -19,17 +19,17 @@ using namespace std;
 
 
 int get_current_dir(char pBuf[FILENAME_MAX]) {
-    int n;
+    int len;
     #ifdef WINDOWS
-    n = GetModuleFileName(NULL, pBuf, FILENAME_MAX);
+    len = GetModuleFileName(NULL, pBuf, FILENAME_MAX);
     #else
-    n = readlink("/proc/self/exe", pBuf, FILENAME_MAX);
+    len = readlink("/proc/self/exe", pBuf, FILENAME_MAX);
     #endif
-    if(n>0&&n<FILENAME_MAX){
-        cout<<pBuf<<endl;
-        return 0;
+    if(len>0&&len<FILENAME_MAX){
+        //cout<<pBuf<<endl;
+        return len;
     }
-    return 1;
+    return 0;
 }
 
 
@@ -38,16 +38,36 @@ namespace dg{
     int loadEvents(){
         xml_document eventDB;
         char pBuf[FILENAME_MAX];
-        if(get_current_dir(pBuf)){
+        int filelen = get_current_dir(pBuf);
+        if(!filelen){
             cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
             return 1; 
         }
-        
+        string path = string(pBuf,filelen);
+        string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/events.xml";
+        wstring widestr = std::wstring(ppath.begin(), ppath.end());
+        const wchar_t* widecstrpath = widestr.c_str();
+        //cout<<ppath<<endl;
 
-        if (!eventDB.load_file("data/events.xml")){
+        if (!eventDB.load_file(widecstrpath)){
             cout<<"EVENT FILE MISSING, events.xml not found"<<endl;
             return 1;
         }
+
+        xml_node events = eventDB.child("EventDef");
+        for (xml_node_iterator it = events.begin(); it != events.end(); ++it)
+        {
+            cout << "Event:" << it->attribute("Name").value();
+
+
+            for (xml_node_iterator cit = it->begin(); cit != it->end(); ++cit){
+                cout << endl << '\t' << cit->name() << ": " << cit->text().get();
+            }
+
+            cout << endl;
+        }
+
+        cout << endl;
         return 0;
     }
     int loadInit(){
