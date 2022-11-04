@@ -1,4 +1,4 @@
-// TestTemp.h 
+// TestTemp.h | From: https://www.codeproject.com/Articles/48575/How-to-Define-a-Template-Class-in-a-h-File-and-Imp
 #ifndef _TESTTEMP_H_
 #define _TESTTEMP_H_
   
