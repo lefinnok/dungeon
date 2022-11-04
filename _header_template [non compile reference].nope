@@ -1,0 +1,32 @@
+// TestTemp.h 
+#ifndef _TESTTEMP_H_
+#define _TESTTEMP_H_
+  
+template<class T>
+class TestTemp   
+{
+public:
+    TestTemp();
+    void SetValue( T obj_i );
+    T Getalue();
+ 
+private:
+ 
+    T m_Obj;
+};
+#endif
+
+// TestTemp.cpp
+#include "TestTemp.h"
+
+TestTemp::TestTemp()
+{
+}
+void TestTemp::SetValue( T obj_i )
+{
+ 
+}
+T TestTemp::Getalue()
+{
+    return m_Obj;
+}
