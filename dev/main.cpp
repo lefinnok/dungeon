@@ -1,12 +1,15 @@
+/*
+This is the main script
+*/
+
 #include <iostream>
-#include "out.h"
+#include "io.h"
+#include "saveload.h"
 using namespace std;
 using namespace dg;
 
-namespace dg{
-    
-}
+
 
 int main(){
-    
+    return loadInit();
 }

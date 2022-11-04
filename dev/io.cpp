@@ -2,5 +2,5 @@
 using namespace std;
 
 namespace dg{
-
+    
 }
