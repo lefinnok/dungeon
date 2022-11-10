@@ -11,5 +11,5 @@ using namespace dg;
 
 
 int main(){
-    return loadInit();
+    return ioloop();
 }

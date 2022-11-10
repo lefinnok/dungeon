@@ -2,7 +2,7 @@ BUILDDIR := build
 FLAGS = -pedantic-errors -std=c++11
 
 $(BUILDDIR)/io.o: io.cpp io.h
-	g++ $(FLAGS) -c $< -o $@
+	g++ $(FLAGS) -c $< -o $@ -lncurses
 
 $(BUILDDIR)/mob.o: mob.cpp mob.h
 	g++ $(FLAGS) -c $< -o $@
@@ -19,7 +19,7 @@ $(BUILDDIR)/main.o: main.cpp
 OBJECTS = $(BUILDDIR)/main.o $(BUILDDIR)/event.o $(BUILDDIR)/mob.o $(BUILDDIR)/io.o $(BUILDDIR)/saveload.o
 
 $(BUILDDIR)/main: $(OBJECTS)
-	g++ $(FLAGS) $^ -o $@
+	g++ $(FLAGS) $^ -o $@ -lncurses
 
 clean_o:
 	rm -f $(OBJECTS)
