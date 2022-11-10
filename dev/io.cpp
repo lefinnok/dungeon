@@ -10,10 +10,25 @@
 using namespace std;
 
 namespace dg{
-    int ioloop(){
-        for(int i = 0; i < 10; i++){
-            printf("%c", getch());
-        }
+    //initialize ncurses library
+    int curses_init(){
+        initscr();
+        timeout(-1);
+        
         return 0;
     }
+    int curses_wrapup(){
+        endwin();
+        return 0;
+    }
+    int ioloop(){
+        curses_init();
+        for(int i = 0; i < 10; i++){
+            printw("%d",getch());
+            
+        }
+        curses_wrapup();
+        return 0;
+    }
+    
 }
