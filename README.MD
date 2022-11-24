@@ -30,10 +30,10 @@ The main program will call other functions for skills, mob atks, mob generation 
         |   24/24  |
         |   slime  |
         ------------
-        
---------------------------------
 atk   def    use item
 hp:100
+
+--------------------------------
 
 -When the user use atk, the mob will decrease its hp the damage of the weapon's atk, if the number of remaining hp<=0, print out "you have defeated xxx"
  if the number of remaining hp >0, print out the scene like the scene above with updated mob health
