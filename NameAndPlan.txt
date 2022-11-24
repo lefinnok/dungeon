@@ -1,8 +1,18 @@
 Name and UID:
 Lee Sin Wing 3035928196
 Kwok Chak Lai 3035994808
-Angeles Megan
-Vu Duc Manh
 
 
 Plan(Written by Lee Sin Wing):
+
+Make a trpg game (use words and commands to fight,all scenes will be output to the terminal.
+
+Expected content:
+-user run the game by typing ./io
+-the game prints out some welcome words(e.g Hello adventurers....)
+-the game asks the user to type in the username (e.g Sorry I forget what is your name, can you say it again?) and user inputs the username and presses enter
+-the game opens the saveload file and check if the username is there, 
+ If yes then print out "Hi xxxx, here is your stuff" and print out his stat as well as last time's progress
+ If no, print out "sorry I can't find your name on my list, would you like to introduce yourself?" and print out "can I have your name?".
+ The user inputs the preferred username and the input will be added to the saveload file. It will also add the basic stat to the user's save 
+-The game prints out the user
