@@ -5,7 +5,9 @@
 #include <string>
 namespace dg{
 	//references and inspiration from mork borg
+	// map for converting attribute to modifer
 	extern std::map<int,int> modifier_convert;
+	// mobs name and description
 	class mob;
 	class attributes{
 		public:
