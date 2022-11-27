@@ -36,4 +36,18 @@ The main program will call other functions for skills, mob atks, mob generation 
 -If the user is defeated by the mob, print out "you have been defeated by xxx, please try harder next time" and jump back to the scene before startdungeon command
 
 Implemented features:
-mobs with random gears
+Generation of random game sets or events
+-this is done by generating mobs with random gears and attributes.
+
+Data structures for storing game status
+-saveload.cpp and saveload.h are used to store user's items, status and the game status
+
+Dynamic memory management
+-the saveload files can store infinite amount of user data, when the user adds his characters into the game, the variables for the user's character is added to the file
+
+File input/output (e.g., for loading/saving game status)
+-the program read the saveload.cpp and saveload.h for loading the game and write the saveload.cpp for saving the game.
+
+Program codes in multiple files
+-it has event.h and event.cpp for game event, mob.h and mob.cpp for mob generations, io.cpp and io.h for receiving input and output from the user, etc
+
