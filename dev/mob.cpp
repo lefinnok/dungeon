@@ -1,5 +1,8 @@
 #include <iostream>
-#include "mob.hpp"
+#include "mob.h"
+#include <map>
+#include <string>
+
 using namespace std;
 
 namespace dg{
