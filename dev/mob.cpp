@@ -36,6 +36,8 @@ namespace dg{
 		{19,3},
 		{20,3}
 	};
+	
+	//function to set the class mob
 	mob::mob(){
 		
 		// mobs detail like name, description
@@ -48,22 +50,37 @@ namespace dg{
 	}
 	
 }
+//converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
+//agility is the input
+//agility_mod is the output
 int attributes::getAgilityMod(int agility, int agility_mod) {
 	agility_mod= dg::modifier_convert[agility];
 	return agility_mod;
 
 }
 
+//converting presence to its modifier, it uses moidier_convert to convert, return the modifier at the end
+//presence is the input
+//presence_mod is the output
 int attributes::getPresenceMod(int presence, int presence_mod) {
 	presence_mod= dg::modifier_convert[presence];
 	return presence_mod;
 
 }
+
+
+//converting strength to its modifier, it uses moidier_convert to convert, return the modifier at the end
+//strength is the input
+//strengthe_mod is the output
 int attributes::getStrengthMod(int strength, int strength_mod) {
 	strength_mod= dg::modifier_convert[strength];
 	return strength_mod;
 
 }
+
+//converting toughness to its modifier, it uses moidier_convert to convert, return the modifier at the end
+//toughness is the input
+//toughness_mod is the output
 int attributes::getToughnessMod(int toughness, int toughness_mod) {
 	toughness_mod= dg::modifier_convert[toughness];
 	return toughness_mod;
