@@ -48,23 +48,24 @@ namespace dg{
 	}
 	
 }
-int getAgilityMod(int agility, int agility_mod) {
+int attributes::getAgilityMod(int agility, int agility_mod) {
 	agility_mod= modifier_convert[agility];
-	
+	return agility_mod;
 
 }
 
-int getPresenceMod(int presence, int presence_mod) {
+int attributes::getPresenceMod(int presence, int presence_mod) {
 	presence_mod= modifier_convert[presence];
-	
+	return presence_mod;
 
 }
-int getStrengthMod(int strength, int strength_mod) {
+int attributes::getStrengthMod(int strength, int strength_mod) {
 	strength_mod= modifier_convert[strength];
+	return strength_mod;
 
 }
-int getToughnessMod(int toughness, int toughness_mod) {
+int attributes::getToughnessMod(int toughness, int toughness_mod) {
 	toughness_mod= modifier_convert[toughness];
-	
+	return toughness_mod;
 
 }
