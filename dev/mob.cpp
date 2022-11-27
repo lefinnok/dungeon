@@ -38,6 +38,12 @@ namespace dg{
 	};
 	mob::mob(){
 	//for example, write the construction for class mob here
+		class mob{
+			int base_health;
+			int base_strength;
+		
+		
+		}
 	}
 }
 //get modifier
