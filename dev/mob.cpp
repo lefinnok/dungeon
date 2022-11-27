@@ -11,5 +11,8 @@ namespace dg{
 		{2,-3},
 		{20,3}
 	};
+	mob::mob(){
+	//for example, write the construction for class mob here
+	}
 }
 //get modifier
