@@ -4,7 +4,7 @@ FLAGS = -pedantic-errors -g
 $(BUILDDIR)/io.o: io.cpp io.hpp databases.hpp
 	g++ $(FLAGS) -c $< -o $@ -lncursesw
 
-$(BUILDDIR)/mob.o: mob.cpp mob.h databases.hpp
+$(BUILDDIR)/mob.o: mob.cpp mob.hpp databases.hpp
 	g++ $(FLAGS) -c $< -o $@
 
 $(BUILDDIR)/event.o: event.cpp event.hpp io.o databases.hpp
