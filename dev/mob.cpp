@@ -44,6 +44,27 @@ namespace dg{
 			string mob_description;
 		
 		
-		}
+		};
 	}
+	
+}
+int getAgilityMod(int agility, int agility_mod) {
+	agility_mod= modifier_convert[agility];
+	
+
+}
+
+int getPresenceMod(int presence, int presence_mod) {
+	presence_mod= modifier_convert[presence];
+	
+
+}
+int getStrengthMod(int strength, int strength_mod) {
+	strength_mod= modifier_convert[strength];
+
+}
+int getToughnessMod(int toughness, int toughness_mod) {
+	toughness_mod= modifier_convert[toughness];
+	
+
 }
