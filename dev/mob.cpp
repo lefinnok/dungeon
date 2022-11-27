@@ -37,13 +37,13 @@ namespace dg{
 		{20,3}
 	};
 	mob::mob(){
-	//for example, write the construction for class mob here
+		
+		// mobs detail like name, description
 		class mob{
-			int base_health;
-			int base_strength;
+			string mob_name;
+			string mob_description;
 		
 		
 		}
 	}
 }
-//get modifier
