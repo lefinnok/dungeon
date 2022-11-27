@@ -7,12 +7,20 @@
 //#include "libs/llvm-15.0.2.src/BinaryFormat/ELF.h"
 #endif
 
+#include "databases.hpp"
 #include <iostream>
 #include <algorithm>
 #include "libs/pugixml-1.13/src/pugixml.hpp"
-#include "event.h"
+#include "event.hpp"
+#include <filesystem>
+#include "io.hpp"
+#include <map>
+#include <fstream>
+#include <unistd.h>
 using namespace pugi;
 using namespace std;
+using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
+
 //references:
 //https://linuxhint.com/parse_xml_in_cpp/
 //https://www.tutorialspoint.com/find-out-the-current-working-directory-in-c-cplusplus
@@ -38,15 +46,67 @@ int get_current_dir(char pBuf[FILENAME_MAX]) {
 
 
 namespace dg{
+    char curDir[FILENAME_MAX];
+    int filelen;
+	//map<string, sprite*> SPRITEDB;
+	
+	//from: https://gist.github.com/thirdwing/da4621eb163a886a03c5
+	//gets memeroy usage || for debbugging use only (not really useful, use valgrind instead)
+	void process_mem_usage(double& vm_usage, double& resident_set)
+	{
+	    vm_usage     = 0.0;
+	    resident_set = 0.0;
+	
+	    // the two fields we want
+	    unsigned long vsize;
+	    long rss;
+	    {
+	        std::string ignore;
+	        std::ifstream ifs("/proc/self/stat", std::ios_base::in);
+	        ifs >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	                >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	                >> ignore >> ignore >> vsize >> rss;
+	    }
+	
+	    long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
+	    vm_usage = vsize / 1024.0;
+	    resident_set = rss * page_size_kb;
+	}
+	
+	//loopthrough sprite folders for sprites
+	int spriteloopthrough(){
+		string path = string(curDir, filelen);
+		string imgpath = path.substr(0,path.find_last_of("\\/")) + "/data/sprite_asset";
+		for(const filesystem::directory_entry& dirEntry : recursive_directory_iterator(imgpath)){
+			
+			if(dirEntry.path().filename().extension()!=".sprite"||dirEntry.file_size()==0){
+				continue;
+			}
+			string spath(dirEntry.path().c_str());
+            string sname(dirEntry.path().filename().stem().c_str());
+			cout<<"Loading Sprite:"<<sname<<endl;
+			if(SPRITEDB.count(sname) != 0){
+				cout<<"Sprite duplicate found, replacing with new sprite"<<endl;
+				//delete the existing sprite at that address
+				delete(SPRITEDB[sname]);
+				map<string,sprite*>::iterator it = SPRITEDB.find(sname);
+				//Replace value instead of inserting new one (it caused a memory leak)
+				if(it != SPRITEDB.end()){
+					it->second = new sprite(spath,sname);
+				}
+				cout<<"Sprite Replaced"<<endl;
+			}else{
+				SPRITEDB.insert({sname,new sprite(spath,sname)});
+				cout<<"Sprite Created"<<endl;
+			}
+			cout<<"===Sprite Loaded==="<<endl;
+		}
+		return 0;
+	}
     int loadEvents(){
         xml_document eventDB;
-        char pBuf[FILENAME_MAX];
-        int filelen = get_current_dir(pBuf);
-        if(!filelen){
-            cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
-            return 1; 
-        }
-        string path = string(pBuf,filelen);
+        
+        string path = string(curDir,filelen);
         string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/events.xml";
         wstring widestr = std::wstring(ppath.begin(), ppath.end());
         const wchar_t* widecstrpath = widestr.c_str();
@@ -73,10 +133,32 @@ namespace dg{
         cout << endl;
         return 0;
     }
+
     int loadInit(){
+        filelen = get_current_dir(curDir);
+        if(!filelen){
+            cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
+            return 1; 
+        }
         if(loadEvents()){
             return 1;
         }
+		if(spriteloopthrough()){
+			return 1;
+		}
         return 0;
     }
+
+	int loadWrap(){
+		//deconstruct SPRITEDB
+		for(pair<const string,sprite*> p: SPRITEDB){
+			/*
+			for(string line: *(p.second->getlines())){
+				cout<<line<<endl;
+			}
+			*/
+			delete(p.second);
+		}
+		return 0;
+	}
 }
