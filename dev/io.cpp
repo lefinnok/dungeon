@@ -15,6 +15,7 @@
 #include "saveload.hpp"
 #include <map>
 #include <vector>
+#include "io.hpp"
 using namespace std;
 
 
@@ -71,6 +72,8 @@ namespace dg{
 	vector<string>* sprite::getlines(){
 		return &lines;
 	}
+	
+	
 
     //called when screensize updates
     void update_screen_size(){

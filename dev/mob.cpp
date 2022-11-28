@@ -1,5 +1,5 @@
 #include <iostream>
-#include "mob.h"
+#include "mob.hpp"
 #include <map>
 #include <string>
 
@@ -11,8 +11,8 @@ namespace dg{
 		{2,-3},
 		{20,3}
 	};
-	mob::mob(){
+	/*mob::mob(){
 	//for example, write the construction for class mob here
-	}
+	}*/
 }
 //get modifier
