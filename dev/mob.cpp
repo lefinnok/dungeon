@@ -36,55 +36,71 @@ namespace dg{
 		{19,3},
 		{20,3}
 	};
+}
+
+//get the modifier from agility
+//agility is the input and the modifier is the output
+int getAgilityMod(int& agility) {
+	agility = dg::modifier_convert[agility];
+	return agility;
+
+}
+
+//get the modifier from presence
+//presence is the input and the modifier is the output
+int getPresenceMod(int& presence) {
+	presence = dg::modifier_convert[presence];
+	return presence;
+
+}
+// get the modifier from strength
+//strength is the input and the output is modifier
+int getStrengthMod(int& strength) {
+	strength = dg::modifier_convert[strength];
+	return strength;
+
+}
+
+// get the modifier from toughness
+// toughness is the input and the output is the modifier
+int getToughnessMod(int& toughness) {
+	toughness = dg::modifier_convert[toughness];
+	return toughness;
+
+}
+
+int mob() {
+
+	// mobs detail like name, description
+	class mob {
+		string mob_name;
+		string mob_description;
+	};
+	return 0;
+};
+
+//add attributes to the mobs and convert the to modifiers
+int main() {
+	dg::attributes mobs;
+	int agility;
+	mobs.agility = agility;
+	int presence;
+	mobs.presence = presence;
+	int strength;
+	mobs.strength = strength;
+	int toughness;
+	mobs.toughness = toughness;
+
+	int agmod = getAgilityMod(agility);
+	mobs.agmod = agmod;
+	int prmod = getPresenceMod(presence);
+	mobs.prmod = prmod;
+	int strmod = getStrengthMod(strength);
+	mobs.strmod = strmod;
+	int toumod = getToughnessMod(toughness);
+	mobs.toumod = toumod;
+	cout << mobs.agility << mobs.presence << mobs.toughness << mobs.strength << mobs.agmod << mobs.prmod << mobs.strmod << mobs.toumod;
 	
-
-	//This is a constructor to make an instance of the class(and object) from the class, it's generally not written as such
-	/*
-	//function to set the class mob
-	mob::mob(){
-		
-		// mobs detail like name, description
-		class mob{
-			string mob_name;
-			string mob_description;
-		
-		
-		};
-	}*/
 	
-}
-//converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//agility is the input
-//agility_mod is the output
-int attributes::getAgilityMod() {
-	return modifier_convert[agility];
-
-}
-
-//converting presence to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//presence is the input
-//presence_mod is the output
-int attributes::getPresenceMod(int presence, int presence_mod) {
-	presence_mod= dg::modifier_convert[presence];
-	return presence_mod;
-
-}
-
-
-//converting strength to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//strength is the input
-//strengthe_mod is the output
-int attributes::getStrengthMod(int strength, int strength_mod) {
-	strength_mod= dg::modifier_convert[strength];
-	return strength_mod;
-
-}
-
-//converting toughness to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//toughness is the input
-//toughness_mod is the output
-int attributes::getToughnessMod(int toughness, int toughness_mod) {
-	toughness_mod= dg::modifier_convert[toughness];
-	return toughness_mod;
-
+	return 0;
 }
