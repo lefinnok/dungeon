@@ -5,6 +5,7 @@ This is the main script
 #include <iostream>
 #include "io.h"
 #include "saveload.h"
+#include "screens.h"
 using namespace std;
 using namespace dg;
 
@@ -13,6 +14,9 @@ int main_init(){
 	EXIT = 0;
 	loadInit();
 	curses_init();
+	new titlescreen("title_screen");
+	SCREENSTACK.push_back("title_screen");
+	printat("what is the problem?",8,16);
 	return 0;
 }
 
