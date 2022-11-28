@@ -29,14 +29,19 @@ using recursive_directory_iterator = std::filesystem::recursive_directory_iterat
 //Dynamic Function Load [Name]: #ended up not implementing
 //https://stackoverflow.com/questions/25270275/get-functions-names-in-a-shared-library-programmatically
 
-
+// get the currrent working directory to current program
+//output is the whole path such as D:\...\...
 int get_current_dir(char pBuf[FILENAME_MAX]) {
     int len;
     #ifdef WINDOWS
+    
+    //gets the directory without the file name
     len = GetModuleFileName(NULL, pBuf, FILENAME_MAX);
     #else
     len = readlink("/proc/self/exe", pBuf, FILENAME_MAX);
     #endif
+	
+    // find the absolute path
     if(len>0&&len<FILENAME_MAX){
         //cout<<pBuf<<endl;
         return len;
@@ -134,7 +139,8 @@ namespace dg{
         return 0;
     }
 
-    int loadInit(){
+    	//executable directory
+	int loadInit(){
         filelen = get_current_dir(curDir);
         if(!filelen){
             cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
