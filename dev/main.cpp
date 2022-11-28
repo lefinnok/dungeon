@@ -1,10 +1,10 @@
 /*
 This is the main script
 */
-#include "databases.hpp"
+#include "databases.h"
 #include <iostream>
-#include "io.hpp"
-#include "saveload.hpp"
+#include "io.h"
+#include "saveload.h"
 using namespace std;
 using namespace dg;
 

@@ -18,7 +18,7 @@ namespace dg{
 			int strength;
 			int toughness;
 			//get modifer from attribute
-			int getAgilityMod(int agility, int agility_mod);
+			int getAgilityMod();
 			int getPresenceMod(int presence, int presence_mod);
 			int getStrengthMod(int strength, int strength_mod);
 			int getToughnessMod(int toughness, int toughness_mod);	

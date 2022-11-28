@@ -11,11 +11,11 @@
 #include <ncurses.h>
 //#include "libs/llvm-15.0.2.src/BinaryFormat/ELF.h"
 #endif
-#include "databases.hpp"
-#include "saveload.hpp"
+#include "databases.h"
+#include "saveload.h"
 #include <map>
 #include <vector>
-#include "io.hpp"
+#include "io.h"
 using namespace std;
 
 

@@ -1,10 +1,10 @@
 #include <iostream>
-#include "mob.hpp"
+#include "mob.h"
 #include <map>
 #include <string>
 
 using namespace std;
-
+using namespace dg;
 namespace dg{
 	// modifier for converting abilities to the chance of success rate.
 	// If the ability is 1-4, then the success rate of that ability decrease by 3
@@ -37,6 +37,9 @@ namespace dg{
 		{20,3}
 	};
 	
+
+	//This is a constructor to make an instance of the class(and object) from the class, it's generally not written as such
+	/*
 	//function to set the class mob
 	mob::mob(){
 		
@@ -47,15 +50,14 @@ namespace dg{
 		
 		
 		};
-	}
+	}*/
 	
 }
 //converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
 //agility is the input
 //agility_mod is the output
-int attributes::getAgilityMod(int agility, int agility_mod) {
-	agility_mod= dg::modifier_convert[agility];
-	return agility_mod;
+int attributes::getAgilityMod() {
+	return modifier_convert[agility];
 
 }
 
