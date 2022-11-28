@@ -83,8 +83,28 @@ namespace dg{
 	    return modifier_convert[presence];
     	                     
 	}
+	
+	mob::mob(string nm, int hp, int ac, int ag, int pr, int st, int tn){
+		name = nm;
+		base_hp = hp;
+		base_ac = ac;
+		attr.agility = ag;
+		attr.presence = pr;
+		attr.strength = st;
+		attr.toughness = tn;
+	}
+	void mob::cout_stats(){
+		cout<<"==="<<name<<"==="<<endl;
+		cout<<"HP: "<<base_hp<<" AC: "<<base_ac<<endl;
+		cout<<"Agility: "<<attr.agility<<" ("<<attr.getAgilityMod()<<")"<<endl;
+		cout<<"Strength: "<<attr.strength<<" ("<<attr.getStrengthMod()<<")"<<endl;
+		cout<<"Presence: "<<attr.presence<<" ("<<attr.getPresenceMod()<<")"<<endl;
+		cout<<"Toughness: "<<attr.toughness<<" ("<<attr.getToughnessMod()<<")"<<endl;
+	}
 }
 int main(void){
-	cout<<"yey"<<endl;
+	mob goblin("Goblin 1",10,8,16,3,10,9);
+	goblin.cout_stats();		
 	return 0;
-}	
+}
+

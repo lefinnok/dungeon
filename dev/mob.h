@@ -12,7 +12,7 @@ namespace dg{
 	class attributes{
 		public:
 			//constructor
-			attributes();
+			//attributes();
 			int agility;
 			int presence;
 			int strength;
@@ -52,10 +52,12 @@ namespace dg{
 	class mob{
 		public:
 			//constructor
-			mob();
+			mob(std::string, int, int, int, int, int, int);
 			//deconstructor
-			~mob();
+			//~mob();
+			void cout_stats();
 		private:
+			std::string name;
 			int base_hp;
 			int base_ac;
 			attributes attr;
