@@ -84,6 +84,9 @@ namespace dg{
     	                     
 	}
 	
+	//setting the base value of a mob and its name
+	//the name, base health, base armor, base agility, base presence, base strength, base toughness of the mob is input
+	//the protected content of the mob is output
 	mob::mob(string nm, int hp, int ac, int ag, int pr, int st, int tn){
 		name = nm;
 		base_hp = hp;
@@ -93,6 +96,16 @@ namespace dg{
 		attr.strength = st;
 		attr.toughness = tn;
 	}
+
+	//print out the stats of the mob
+	//input is the mob's basic value and name
+	//output is the mob's basic value and name in the format of:
+	//===mob's name===
+	//HP: mob's base health AC: mob's base armor
+	//Agility: mob's agility (modifier for agility)
+	//Strength: mob's strength (modifier for strength)
+	//Presence: mob's presence (modifier for presence)
+	//Toughness: mob's toughness (modifier for toughness)
 	void mob::cout_stats(){
 		cout<<"==="<<name<<"==="<<endl;
 		cout<<"HP: "<<base_hp<<" AC: "<<base_ac<<endl;
@@ -101,10 +114,54 @@ namespace dg{
 		cout<<"Presence: "<<attr.presence<<" ("<<attr.getPresenceMod()<<")"<<endl;
 		cout<<"Toughness: "<<attr.toughness<<" ("<<attr.getToughnessMod()<<")"<<endl;
 	}
+
+	//setting the base value of an equipment and its name
+	//the name, base health, base armor, base agility, base presence, base strength, base toughness of the equipment is input
+	//the protected content of the equipment is output
+	equipment::equipment(string nm, int hp, int ac, int ag, int pr, int st, int tn) {
+		eqname = nm;
+		eqbase_hp = hp;
+		eqbase_ac = ac;
+		eqattr.agility = ag;
+		eqattr.presence = pr;
+		eqattr.strength = st;
+		eqattr.toughness = tn;
+	}
+
+	//print out the stats of the equipment
+	//input is the equipment's basic value and name
+	//output is the equipment's basic value and name in the format of:
+	//===equipment's name===
+	//HP: equipment's base health AC: equipment's base armor
+	//Agility: equipment's agility (modifier for agility)
+	//Strength: equipment's strength (modifier for strength)
+	//Presence: equipment's presence (modifier for presence)
+	//Toughness: equipment's toughness (modifier for toughness)
+	void equipment::cout_eqstats() {
+		cout << "===" << eqname << "===" << endl;
+		cout << "Added HP: " << eqbase_hp << "Added AC: " << eqbase_ac << endl;
+		cout << "Added Agility: " << eqattr.agility << " (" << eqattr.getAgilityMod() << ")" << endl;
+		cout << "Added Strength: " << eqattr.strength << " (" << eqattr.getStrengthMod() << ")" << endl;
+		cout << "Added Presence: " << eqattr.presence << " (" << eqattr.getPresenceMod() << ")" << endl;
+		cout << "Added Toughness: " << eqattr.toughness << " (" << eqattr.getToughnessMod() << ")" << endl;
+	}
+
+	//boost on mobs with equipments
+	void equipment::use(mob* target) {
+		
+	}
+
 }
 int main(void){
-	mob goblin("Goblin 1",10,8,16,3,10,9);
-	goblin.cout_stats();		
+	mob goblin1("Goblin 1",10,8,16,3,10,9);
+	goblin1.cout_stats();
+
+	mob goblin2("Goblin 2" ,20,16,16,6,20,9);
+	goblin2.cout_stats();
+
+	equipment leather1("Leather armor", 100, 10, 2, 2, 2, 2);
+	leather1.cout_eqstats();
+
 	return 0;
 }
 
