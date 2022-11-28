@@ -12,16 +12,15 @@ namespace dg{
 	class attributes{
 		public:
 			//constructor
-			attributes();
 			int agility;
 			int presence;
 			int strength;
 			int toughness;
-			//get modifer from attribute
-			int getAgilityMod();
-			int getPresenceMod(int presence, int presence_mod);
-			int getStrengthMod(int strength, int strength_mod);
-			int getToughnessMod(int toughness, int toughness_mod);	
+			//modifer from attribute
+			int agmod;
+			int prmod;
+			int strmod;
+			int toumod;	
 	};
 	//can implement later if have time
 	class effect{
