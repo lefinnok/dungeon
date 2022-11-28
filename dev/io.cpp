@@ -47,7 +47,7 @@ namespace dg{
 		}
 		name = sname;
 		cout << "Sprite <" << name << "> created."<<endl;
-	};
+	}
 
 	//sprite deconstructor
 	sprite::~sprite(){
@@ -56,7 +56,7 @@ namespace dg{
 		//	delete(&s);
 		//}
 		cout << "Sprite <"<< name << "> deconstructed."<<endl;
-	};
+	}
 	
 	//print sprite in window at coordinate x,y
 	void sprite::print(int x, int y){

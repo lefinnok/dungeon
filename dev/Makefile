@@ -1,5 +1,5 @@
 BUILDDIR := build
-FLAGS = -pedantic-errors -g
+FLAGS = -pedantic-errors -g --std=c++17 -lstdc++fs
 
 $(BUILDDIR)/databases.o: databases.cpp databases.h
 	g++ $(FLAGS) -c $< -o $@
