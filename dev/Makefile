@@ -19,7 +19,7 @@ $(BUILDDIR)/saveload.o: saveload.cpp saveload.h databases.h
 $(BUILDDIR)/main.o: main.cpp
 	g++ $(FLAGS) -c $< -o $@
 
-OBJECTS = $(BUILDDIR)/main.o $(BUILDDIR)/databases.o $(BUILDDIR)/event.o $(BUILDDIR)/mob.o $(BUILDDIR)/io.o $(BUILDDIR)/saveload.o
+OBJECTS = $(BUILDDIR)/main.o $(BUILDDIR)/databases.o $(BUILDDIR)/io.o $(BUILDDIR)/mob.o $(BUILDDIR)/event.o $(BUILDDIR)/saveload.o
 
 $(BUILDDIR)/main: $(OBJECTS)
 	g++ $(FLAGS) $^ -o $@ -lncursesw

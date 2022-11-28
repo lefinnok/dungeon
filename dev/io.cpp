@@ -73,8 +73,58 @@ namespace dg{
 		return &lines;
 	}
 	
+	interface_element::~interface_element(){
+		cout<<"Element Deactiviated <"<<handle<<'>'<<endl;
+	}
+	string interface_element::get_handle(){
+		return handle;
+	}
+	void interface_element::print(){
 	
+	}
+	bool interface_element::functional(){
+		return false;
+	}
+	screen::screen(string handle){
+		cout<<"Building Screen <"<<handle<<">"<<endl;
+		this->handle = handle;
+		ACTIVESCREENS.insert({handle,this});
+		cout<<"Screen Activated: ";
+		if(DEBUG){
+			for(pair<string,screen*> p: ACTIVESCREENS){
+				cout << p.first << ' ' << p.second;
+			}
+		}
+		cout<<endl;
+	}
 
+	screen::~screen(){
+		ACTIVESCREENS.erase(handle);
+		for(pair<string,interface_element*> p: iemap){
+			delete(p.second);
+
+		}
+		cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
+	}
+	
+	void screen::add_ie(string handle, interface_element* ie){
+		iemap.insert({handle,ie});
+	}
+	void screen::add_ie(interface_element* ie){
+		iemap.insert({ie->get_handle(),ie});
+	}
+	void screen::remove_ie(string handle){
+		delete(iemap[handle]);
+		iemap.erase(handle);
+	}
+	void screen::print(){
+		for(pair<string,interface_element*> p: iemap){
+			p.second->print();
+		}	
+	}
+	int screen::execute(int key){
+		return 0;
+	}
     //called when screensize updates
     void update_screen_size(){
         getmaxyx(stdscr, SCREENX, SCREENY);
@@ -94,16 +144,14 @@ namespace dg{
 	//wrapup for curses windows
     int curses_wrapup(){
         endwin();
-        free(outbuf);
+		for(pair<string,screen*> p: ACTIVESCREENS){
+			delete(p.second);
+		}
         return 0;
     }
 	//draw character
     void drawc(char c, int x, int y){
         outbuf[10] = c;
-    }
-	//out buffer
-    void buffer_out(){
-        
     }
     /*======TEST FUNCTIONS======*/
     void test_screen_size(){
@@ -129,10 +177,19 @@ namespace dg{
     /*=^^^==TEST FUNCTIONS==^^^=*/
 	//input output functions called in loop
     int ioloop(){
-        curses_init();
-        printsprite();
-        getch();
-        curses_wrapup();
+        //display current screenstack
+		for(string screen_handle: SCREENSTACK){
+			screen* scr = ACTIVESCREENS[screen_handle];
+			scr->print();
+		}
+		//wait for valid input and execute it
+		int exec_code = 1;
+		while(!exec_code){
+			int input = getch();
+			//global input
+			//screen input
+			exec_code = (ACTIVESCREENS[*(--SCREENSTACK.end())])->execute(input);
+		}
         return 0;
     }
     
