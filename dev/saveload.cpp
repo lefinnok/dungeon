@@ -21,7 +21,7 @@
 using namespace pugi;
 using namespace std;
 using namespace dg;
-using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
+using recursive_directory_iterator = std::system::recursive_directory_iterator;
 
 //references:
 //https://linuxhint.com/parse_xml_in_cpp/
@@ -84,7 +84,7 @@ namespace dg{
 	int spriteloopthrough(){
 		string path = string(curDir, filelen);
 		string imgpath = path.substr(0,path.find_last_of("\\/")) + "/data/sprite_asset";
-		for(const filesystem::directory_entry& dirEntry : recursive_directory_iterator(imgpath)){
+		for(const system::directory_entry& dirEntry : recursive_directory_iterator(imgpath)){
 			
 			if(dirEntry.path().filename().extension()!=".sprite"||dirEntry.file_size()==0){
 				continue;
@@ -107,7 +107,7 @@ namespace dg{
 				cout<<"Sprite Created"<<endl;
 			}
 			cout<<"===Sprite Loaded==="<<endl;
-		}
+		};
 		return 0;
 	}
     int loadEvents(){
