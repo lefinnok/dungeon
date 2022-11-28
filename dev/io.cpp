@@ -136,6 +136,9 @@ namespace dg{
 		}
 		cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
 	}
+	void screen::destruct(){
+		delete this;
+	}
 	void screen::move(int dx, int dy){
 		x += dx;
 		y += dy;

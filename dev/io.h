@@ -66,6 +66,7 @@ namespace dg{
 			void move_ie(string, int, int);
 			void move(int,int);
 			void setloc(int,int);
+			void destruct();
 		private:
 			//if the screen is currently (or entirely) controllable, if not, the screen plays automatically, enabling animations and such
 			bool controllable;

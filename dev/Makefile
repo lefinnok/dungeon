@@ -1,4 +1,5 @@
 BUILDDIR := build
+MOBBUILD := mobbuild
 FLAGS = -pedantic-errors -g --std=c++17 -lstdc++fs
 
 $(BUILDDIR)/databases.o: databases.cpp databases.h
@@ -29,6 +30,9 @@ OBJECTS = $(BUILDDIR)/main.o $(BUILDDIR)/databases.o $(BUILDDIR)/io.o $(BUILDDIR
 
 $(BUILDDIR)/main: $(OBJECTS)
 	g++ $(FLAGS) $^ -o $@ -lncursesw
+
+${MOBBUILD}/mob: mob.cpp mob.h
+	g++ ${FLAGS} $< -o $@ 
 
 clean_o:
 	rm -f $(OBJECTS)

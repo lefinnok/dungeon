@@ -8,8 +8,8 @@ namespace dg{
 	titlescreen::titlescreen(string handle):screen(handle){
 		setloc(0,0);
 		setcontrollable(true);
-		add_ie(new uisprite("celt_deco_1",SPRITEDB["celt_knot_1"],0,10));
-		add_ie(new uisprite("title_bar", SPRITEDB["dungeon_core_title"],6,10));
+		add_ie(new uisprite("celt_deco_1",SPRITEDB["celt_knot_1"],0,12));
+		add_ie(new uisprite("title_bar", SPRITEDB["dungeon_core_title"],6,13));
 		add_ie(new uitext("[C]ontinue Character","continue_text",16,22));
 		add_ie(new uitext("[N]ew Character","new_text",16,24));
 		add_ie(new uitext("[Q]uit","quit_text",16,26));
@@ -20,6 +20,13 @@ namespace dg{
                 EXIT = 1;
                 return 1;
 			}
+			case('c'):{
+				return 1;
+			}
+			case('n'):{
+				return 1;
+			}
+
 			default:{
 				return 0;		
 			}

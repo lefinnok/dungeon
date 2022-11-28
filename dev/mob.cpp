@@ -52,39 +52,39 @@ namespace dg{
 		};
 	}*/
 	
+
+	//converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//agility is the input
+	//agility_mod is the output
+	int attributes::getAgilityMod() {
+		return modifier_convert[agility];
+	
+	}
+	
+	//converting presence to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//presence is the input
+	//presence_mod is the output
+	int attributes::getStrengthMod() {
+	    return modifier_convert[strength];
+	                         
+	}  
+	
+	//converting strength to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//strength is the input
+	//strengthe_mod is the output
+	int attributes::getToughnessMod() {
+	    return modifier_convert[toughness];
+	                         
+	}  
+	//converting toughness to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//toughness is the input
+	//toughness_mod is the output
+	int attributes::getPresenceMod() {
+	    return modifier_convert[presence];
+    	                     
+	}
 }
-//converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//agility is the input
-//agility_mod is the output
-int attributes::getAgilityMod() {
-	return modifier_convert[agility];
-
-}
-
-//converting presence to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//presence is the input
-//presence_mod is the output
-int attributes::getPresenceMod(int presence, int presence_mod) {
-	presence_mod= dg::modifier_convert[presence];
-	return presence_mod;
-
-}
-
-
-//converting strength to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//strength is the input
-//strengthe_mod is the output
-int attributes::getStrengthMod(int strength, int strength_mod) {
-	strength_mod= dg::modifier_convert[strength];
-	return strength_mod;
-
-}
-
-//converting toughness to its modifier, it uses moidier_convert to convert, return the modifier at the end
-//toughness is the input
-//toughness_mod is the output
-int attributes::getToughnessMod(int toughness, int toughness_mod) {
-	toughness_mod= dg::modifier_convert[toughness];
-	return toughness_mod;
-
-}
+int main(void){
+	cout<<"yey"<<endl;
+	return 0;
+}	

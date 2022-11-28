@@ -8,5 +8,10 @@ namespace dg{
 			titlescreen(std::string);
 			int execute(int key);
 	};
+	class character_creation:public screen{
+		public:
+			character_creation(std::string);
+			int execute(int key);
+	};
 }
 #endif

@@ -19,9 +19,9 @@ namespace dg{
 			int toughness;
 			//get modifer from attribute
 			int getAgilityMod();
-			int getPresenceMod(int presence, int presence_mod);
-			int getStrengthMod(int strength, int strength_mod);
-			int getToughnessMod(int toughness, int toughness_mod);	
+			int getPresenceMod();
+			int getStrengthMod();
+			int getToughnessMod();	
 	};
 	//can implement later if have time
 	class effect{
