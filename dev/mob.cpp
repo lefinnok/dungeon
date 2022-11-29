@@ -53,7 +53,7 @@ namespace dg{
 	}*/
 	
 
-	//converting agility to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//converting agility to its modifier, it uses modifier_convert to convert, return the modifier at the end
 	//agility is the input
 	//agility_mod is the output
 	int attributes::getAgilityMod() {
@@ -61,7 +61,7 @@ namespace dg{
 	
 	}
 	
-	//converting presence to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//converting presence to its modifier, it uses modifier_convert to convert, return the modifier at the end
 	//presence is the input
 	//presence_mod is the output
 	int attributes::getStrengthMod() {
@@ -69,14 +69,14 @@ namespace dg{
 	                         
 	}  
 	
-	//converting strength to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//converting strength to its modifier, it uses modifier_convert to convert, return the modifier at the end
 	//strength is the input
 	//strengthe_mod is the output
 	int attributes::getToughnessMod() {
 	    return modifier_convert[toughness];
 	                         
 	}  
-	//converting toughness to its modifier, it uses moidier_convert to convert, return the modifier at the end
+	//converting toughness to its modifier, it uses modifier_convert to convert, return the modifier at the end
 	//toughness is the input
 	//toughness_mod is the output
 	int attributes::getPresenceMod() {
@@ -101,10 +101,112 @@ namespace dg{
 		cout<<"Presence: "<<attr.presence<<" ("<<attr.getPresenceMod()<<")"<<endl;
 		cout<<"Toughness: "<<attr.toughness<<" ("<<attr.getToughnessMod()<<")"<<endl;
 	}
+	
+	// get the mob's protected member without declaring derived classes or child classes
+	//intput is the corresponding protected member from mob
+	//output is the member but not protected
+	int mob::mobbase_hp(){
+		return base_hp;
+	}
+
+	int mob::mobbase_ac() {
+		return base_ac;
+	}
+
+	int mob::mobagility() {
+		return attr.agility;
+	}
+
+	int mob::mobstrength() {
+		return attr.strength;
+	}
+
+	int mob::mobpresence() {
+		return attr.presence;
+	}
+
+	int mob::mobtoughness() {
+		return attr.toughness;
+	}
+
+	//setting the base value of an equipment and its name
+	//the name, base health, base armor, base agility, base presence, base strength, base toughness of the equipment is input
+	//the protected content of the equipment is output
+	equipment::equipment(string nm, int hp, int ac, int ag, int pr, int st, int tn) {
+		eqname = nm;
+		eqbase_hp = hp;
+		eqbase_ac = ac;
+		eqattr.agility = ag;
+		eqattr.presence = pr;
+		eqattr.strength = st;
+		eqattr.toughness = tn;
+	}
+
+	//print out the stats of the equipment
+	//input is the equipment's basic value and name
+	//output is the equipment's basic value and name in the format of:
+	//===equipment's name===
+	//HP: equipment's base health AC: equipment's base armor
+	//Agility: equipment's agility (modifier for agility)
+	//Strength: equipment's strength (modifier for strength)
+	//Presence: equipment's presence (modifier for presence)
+	//Toughness: equipment's toughness (modifier for toughness)
+	void equipment::cout_eqstats() {
+		cout << "===" << eqname << "===" << endl;
+		cout << "Added HP: " << eqbase_hp << "Added AC: " << eqbase_ac << endl;
+		cout << "Added Agility: " << eqattr.agility << " (" << eqattr.getAgilityMod() << ")" << endl;
+		cout << "Added Strength: " << eqattr.strength << " (" << eqattr.getStrengthMod() << ")" << endl;
+		cout << "Added Presence: " << eqattr.presence << " (" << eqattr.getPresenceMod() << ")" << endl;
+		cout << "Added Toughness: " << eqattr.toughness << " (" << eqattr.getToughnessMod() << ")" << endl;
+	}
+
+	// get the equipment's protected member without declaring derived classes or child classes
+	//intput is the corresponding protected member from equipment
+	//output is the member but not protected
+	string equipment::equipname() {
+		return eqname;
+	}
+	int equipment::equipbase_hp() {
+		return eqbase_hp;
+	}
+	int equipment::equipbbase_ac() {
+		return eqbase_ac;
+	}
+	int equipment::equipagility() {
+		return eqattr.agility;
+	}
+	int equipment::equipstrength() {
+		return eqattr.strength;
+	}
+	int equipment::equippresence() {
+		return eqattr.presence;
+	}
+	int equipment::equiptoughness() {
+		return eqattr.toughness;
+	}
+
+	//add the equipment stats with mobs stats
+	void equipment::use(mob* target) {
+		cout << target->mobbase_hp() + eqbase_hp;
+		cout << target->mobbase_ac() + eqbase_ac;
+		cout << target->mobagility() + eqattr.agility;
+		cout << target->mobpresence() + eqattr.presence;
+		cout << target->mobstrength() + eqattr.strength;
+		cout << target->mobtoughness() + eqattr.toughness;
+	}
+
 }
 int main(void){
-	mob goblin("Goblin 1",10,8,16,3,10,9);
-	goblin.cout_stats();		
+	mob goblin1("Goblin 1",10,8,16,3,10,9);
+	goblin1.cout_stats();
+	cout << goblin1.mobagility();
+
+
+	mob goblin2("Goblin 2" ,20,16,16,6,20,9);
+	goblin2.cout_stats();
+
+	equipment leather1("Leather armor", 100, 10, 2, 2, 2, 2);
+	leather1.cout_eqstats();
+
 	return 0;
 }
-
