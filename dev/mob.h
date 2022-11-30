@@ -30,14 +30,27 @@ namespace dg{
 	class equipment{
 		public:
 			//constructor
-			equipment();
+			equipment(std::string, int, int, int, int, int, int);
+			void cout_eqstats();
+			std::string equipname();
+			int equipbase_hp();
+			int equipbbase_ac();
+			int equipagility();
+			int equipstrength();
+			int equippresence();
+			int equiptoughness();
 			//called when the equipment is used against a target
 			virtual void use(mob* target);
+		protected:
+			std::string eqname;
+			int eqbase_hp;
+			int eqbase_ac;
+			attributes eqattr;
 	};
 	class melee_weapon:equipment{
 		public:
 			//constructor
-			melee_weapon();
+			melee_weapon(std::string, int, int, int, int, int);
 			void use(mob* target, attributes* user_attributes);
 	};
 	//implement later
@@ -56,7 +69,13 @@ namespace dg{
 			//deconstructor
 			//~mob();
 			void cout_stats();
-		private:
+			int mobbase_hp();
+			int mobbase_ac();
+			int mobagility();
+			int mobstrength();
+			int mobpresence();
+			int mobtoughness();
+		protected:
 			std::string name;
 			int base_hp;
 			int base_ac;
