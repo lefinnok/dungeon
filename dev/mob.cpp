@@ -196,6 +196,7 @@ namespace dg{
 	}
 
 }
+
 int main(void){
 	mob goblin1("Goblin 1",10,8,16,3,10,9);
 	goblin1.cout_stats();

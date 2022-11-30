@@ -16,17 +16,16 @@
 #include <map>
 #include <vector>
 #include "io.h"
+#include "uielements.h"
 using namespace std;
 
 
 
 
 namespace dg{
-    int SCREENX;
-    int SCREENY;
-	
-
-    char* outbuf;
+    	int SCREENX;
+    	int SCREENY;
+	char* outbuf;
 
 	//sprite constructor
 	sprite::sprite(string path, string sname){
@@ -76,6 +75,7 @@ namespace dg{
 		handle = hdl;
 		x = xl;
 		y = yl;
+		//ievariant = 0;
 	}
 
 	interface_element::~interface_element(){
@@ -89,6 +89,12 @@ namespace dg{
 	}
 	void interface_element::print(int, int){
 		//this is also empty
+	}
+	void interface_element::addattr(int attr){
+		attrs.push_back(attr);
+	}
+	void interface_element::rmvattr(int attr){
+		attrs.remove(attr);
 	}
 	void interface_element::move(int dx, int dy){
 		x += dx;
@@ -105,6 +111,10 @@ namespace dg{
 		functional = func;
 	}
 
+	/*int interface_element::getvariant(){
+		return ievariant;
+	}*/
+
 	uisprite::uisprite(string hdl, sprite* sp, int xl, int yl):interface_element(hdl,xl,yl){
 		sprite_reference = sp;
 	}
@@ -117,6 +127,7 @@ namespace dg{
 
 	screen::screen(string handle){
 		cout<<"Building Screen <"<<handle<<">"<<endl;
+		opaque = false;
 		this->handle = handle;
 		ACTIVESCREENS.insert({handle,this});
 		cout<<"Screen Activated: ";
@@ -131,7 +142,25 @@ namespace dg{
 	screen::~screen(){
 		ACTIVESCREENS.erase(handle);
 		for(pair<string,interface_element*> p: iemap){
+			//interface_element* ie = p.second;
 			delete(p.second);
+			/*switch(ie->getvariant()){
+				case 0:{
+					cout<<'0'<<endl;
+					delete(ie);
+					break;
+				}
+				case 1:{ 
+					cout<<'1'<<endl;
+					delete((dynamictext*)ie);
+					break;
+				}
+				default:{ 
+					cout<<"def"<<endl;
+					delete(ie);
+					break;
+				}
+			}*/
 
 		}
 		cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
@@ -143,7 +172,9 @@ namespace dg{
 		x += dx;
 		y += dy;
 	}
-
+	string screen::gethandle(){
+		return handle;
+	}
 	void screen::setloc(int xl, int yl){
 		x = xl;
 		y = yl;
@@ -162,8 +193,19 @@ namespace dg{
 		iestack.remove(handle);
 	}
 	void screen::print(){
+		//if it is opaque, then, it will cover all screens below (clear screen)
+		if(opaque){
+			clear();
+		}
 		for(string ie_handle: iestack){
-			iemap[ie_handle]->print(x,y);
+			interface_element* printie = iemap[ie_handle];
+			for(int attr: printie->attrs){
+				attron(attr);
+			}
+			printie->print(x,y);
+			for(int attr: printie->attrs){
+				attroff(attr);
+			}
 		}	
 	}
 	//move element by x and y
@@ -181,6 +223,12 @@ namespace dg{
 
 	void screen::setcontrollable(bool con){
 		controllable = con;
+	}
+	void screen::setcenter(bool cen){
+		center = cen;
+	}
+	bool screen::iscenter(){
+		return center;
 	}
     //called when screensize updates
     void update_screen_size(){
@@ -266,6 +314,11 @@ namespace dg{
 					break;
 				}*/
 				case(KEY_RESIZE):{
+					getmaxyx(stdscr, SCREENY, SCREENX);
+					/*for(string scrhandle: SCREENSTACK){
+						screen* scr = ACTIVESCREENS[scrhandle];
+						if(scr->iscenter())scr->setloc(SCREENX,SCREENY);
+					}*/
 					exec_code = 1;
 					break;
 				}
