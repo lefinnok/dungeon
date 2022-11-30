@@ -102,9 +102,9 @@ namespace dg{
 		cout<<"Toughness: "<<attr.toughness<<" ("<<attr.getToughnessMod()<<")"<<endl;
 	}
 }
-int main(void){
+/*int main(void){
 	mob goblin("Goblin 1",10,8,16,3,10,9);
 	goblin.cout_stats();		
 	return 0;
-}
+}*/
 

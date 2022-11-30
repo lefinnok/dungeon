@@ -23,7 +23,7 @@ namespace dg{
 	class interface_element{
 		public:
 			interface_element(string,int,int);
-			~interface_element();
+			virtual ~interface_element();
 			virtual void print();
 			//print relative to this coordniate
 			virtual void print(int x, int y);
@@ -32,10 +32,16 @@ namespace dg{
 			string get_handle();
 			void move(int,int);
 			void setloc(int,int);
+			void addattr(int);
+			void rmvattr(int);
+			list<int> attrs;
+			//int getvariant();
 		protected:
 			int x,y;
 			string handle;
 			bool functional;
+			//int ievariant;
+			
 	};
 	//an instance that references the sprite image which has its own coordinates
 	class uisprite:public interface_element{
@@ -67,14 +73,21 @@ namespace dg{
 			void move(int,int);
 			void setloc(int,int);
 			void destruct();
-		private:
+			void setcenter(bool);
+			bool iscenter();
+			string gethandle();
+		protected:
 			//if the screen is currently (or entirely) controllable, if not, the screen plays automatically, enabling animations and such
-			bool controllable;
+			bool controllable = true;
 			//screen coordinates
-			int x, y;
+			int x = 0;
+			int y = 0;
 			string handle;
 			map<string,interface_element*> iemap;
 			list<string> iestack;
+			bool opaque;
+			bool center = false;
+			//bool bold;
 			
 	};
 	int curses_init();

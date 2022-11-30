@@ -6,6 +6,7 @@ This is the main script
 #include "io.h"
 #include "saveload.h"
 #include "screens.h"
+#include "uielements.h"
 using namespace std;
 using namespace dg;
 
@@ -24,6 +25,7 @@ int main_init(){
 int main_wrap(){
 	curses_wrapup();
 	loadWrap();
+	dynoval_wrap();
 	return 0;
 }
 
