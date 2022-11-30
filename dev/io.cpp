@@ -96,10 +96,16 @@ namespace dg{
 	void interface_element::rmvattr(int attr){
 		attrs.remove(attr);
 	}
+	
+	//move the elements's coordinate
+	//input is dx(change in x coordinate) and dy(change in y coordinate)
+	//output is the new x and y coordinate
 	void interface_element::move(int dx, int dy){
 		x += dx;
 		y += dy;
 	}
+	
+	
 	void interface_element::setloc(int xl, int yl){
 		x = xl;
 		y = yl;
@@ -168,6 +174,10 @@ namespace dg{
 	void screen::destruct(){
 		delete this;
 	}
+	
+	//move the screen elements by x and y
+	//input is dx(change in x coordinate) and dy(change in y coordinate)
+	//output is the new x and y coordinate
 	void screen::move(int dx, int dy){
 		x += dx;
 		y += dy;
@@ -194,6 +204,7 @@ namespace dg{
 	}
 	void screen::print(){
 		//if it is opaque, then, it will cover all screens below (clear screen)
+		//input 
 		if(opaque){
 			clear();
 		}
@@ -216,22 +227,37 @@ namespace dg{
 	int screen::execute(int key){
 		return 0;
 	}
-
+	//check if the screen is controllable or not
+	//input is the bool value of controllable in class screen
+	//output is the bool value of controllable
 	bool screen::getcontrollable(){
 		return controllable;
 	}
-
+	
+	//set the screen to be controllable or not
+	//input is the bool value(true/false)
+	//output is updating the bool value of controllable
 	void screen::setcontrollable(bool con){
 		controllable = con;
 	}
+	
+	//set the screen to be at the center or not
+	//input is the bool value(true/false)
+	//output is updating the bool value of centre
 	void screen::setcenter(bool cen){
 		center = cen;
 	}
+	
+	//get the bool value of centre
+        //output is the bool value of center
 	bool screen::iscenter(){
 		return center;
 	}
+	
+	
     //called when screensize updates
     void update_screen_size(){
+            
         getmaxyx(stdscr, SCREENX, SCREENY);
         //outbuf = (char*)malloc((SCREENX*SCREENY+1)*sizeof(char));
         //outbuf[SCREENX*SCREENY+1] = '\0';
@@ -275,6 +301,8 @@ namespace dg{
         printw("%d %d|",SCREENX, SCREENY);
         getch();
     }
+	
+    
     void printsprite(){
 		SPRITEDB["celt_knot_1"]->print(0,10);
 		SPRITEDB["dungeon_core_title"]->print(6,10);
