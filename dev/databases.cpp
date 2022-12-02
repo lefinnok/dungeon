@@ -10,6 +10,8 @@ namespace dg{
 	class dynamicvalue;
 	int EXIT;
 	bool DEBUG = true;
+	int SCREENX;
+	int SCREENY;
 	map<string,sprite*> SPRITEDB;
 	map<string,screen*> ACTIVESCREENS;
 	map<string,dynamicvalue*> VALDB;

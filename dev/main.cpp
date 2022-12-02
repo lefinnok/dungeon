@@ -17,7 +17,7 @@ int main_init(){
 	curses_init();
 	new titlescreen("title_screen");
 	SCREENSTACK.push_back("title_screen");
-	printat("what is the problem?",8,16);
+	//printat("what is the problem?",8,16,iemask());
 	return 0;
 }
 

@@ -8,12 +8,15 @@ using namespace dg;
         
 namespace dg{
 	//UITEXT
-    	uitext::uitext(string itext, string handle, int xl, int yl):interface_element(handle,xl,yl){
+    	uitext::uitext(wstring itext, string handle, int xl, int yl):interface_element(handle,xl,yl){
 		text = 	itext;
+		size_y = 1;
+		size_x = itext.size();
     	}
 	void uitext::print(int xrel, int yrel){
-		printat(text.c_str(),xrel+x,yrel+y);	
+		printat(text,xrel+x,yrel+y,iemask);	
 	}
+	wstring uitext::getstring(){return text;}
 	//DYNOVAL
 	void dynoval_wrap(){
 		vector<dynamicvalue*> buflst;
@@ -70,6 +73,8 @@ namespace dg{
 		//ievariant=1;
 		destroy_on_deconstruct = true;
 		dynamicval_handle = dynohandle;
+		size_y = 1;
+		size_x = VALDB[dynohandle]->getstring().size();
 	}
 	dynamictext::~dynamictext(){
 		if(destroy_on_deconstruct){
@@ -82,7 +87,7 @@ namespace dg{
 		destroy_on_deconstruct = false;
 	}
 	void dynamictext::print(int xrel, int yrel){
-		printat((VALDB[dynamicval_handle]->getstring()).c_str(),x+xrel,y+yrel);
+		printat(towstring(VALDB[dynamicval_handle]->getstring()),x+xrel,y+yrel, iemask);
 	}
 	//BACKGROUND
 	uibackground::uibackground(int sx, int sy, string handle, int xl, int yl):interface_element(handle,xl,yl){
@@ -92,17 +97,17 @@ namespace dg{
 
 	void uibackground::print(int xrel, int yrel){
 		for(int i = 0; i<size_y;i++){
-			printat(string(size_x, ' ').c_str(),x+xrel,y+yrel+i);
+			printat(wstring(size_x, ' '),x+xrel,y+yrel+i, iemask);
 		}
 	
 	}
 	//BOX
 	void uibox::print(int xrel, int yrel){
-		printat((string("┌")+string(size_x-2,'-')+string("┐")).c_str(),x+xrel,y+yrel);
-		for(int i=1; i<size_y-1;i++){
-			printat((string("|")+string(size_x-2,' ')+string("|")).c_str(),x+xrel,y+yrel+1);
+		printat((L"┌"+wstring(size_x-2,L'─')+L"┐"),x+xrel,y+yrel,iemask);
+		for(int i=1; i<size_y;i++){
+			printat((L"│"+wstring(size_x-2,' ')+L"│"),x+xrel,y+yrel+i,iemask);
 		}	
-		printat((string("└")+string(size_x-2,'-')+string("┘")).c_str(),x+xrel,y+yrel+size_y);
+		printat((L"└"+wstring(size_x-2,L'─')+L"┘"),x+xrel,y+yrel+size_y,iemask);
 
 	}
 } 

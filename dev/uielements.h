@@ -6,10 +6,11 @@ using namespace dg;
 namespace dg{                   
 	class uitext:public interface_element{   
         	public:                 
-            		uitext(string text, string handle, int xl,int yl);
+            		uitext(wstring text, string handle, int xl,int yl);
 			void print(int xl, int yl);
+			wstring getstring();
 		private:
-			string text;
+			wstring text;
    	};
 	void dynoval_wrap();
 	//omg this is gold, reference: https://stackoverflow.com/questions/2919584/override-number-of-parameters-of-pure-virtual-functions [ended up not using]

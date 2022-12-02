@@ -7,16 +7,34 @@
 //???
 using namespace std;
 namespace dg{
+	extern const int MASKED_NOT;
+	extern const int MASKED_UP;
+	extern const int MASKED_DOWN;
+	extern const int MASKED_LEFT;
+	extern const int MASKED_RIGHT;
+	extern const int MASKED_LEFTRIGHT;
+
+	wstring towstring(string);
+	string tostring(wstring);
+	class mask{
+		public:
+			mask() = default;
+			int minx=0;
+			int miny=0;
+			int maxx=999;
+			int maxy=999;
+	};
+
 	//base sprite, not an interface element, but the storage of sprite characters
 	class sprite{
 		public:
 			sprite(string,string);
 			~sprite();
-			vector<string>* getlines();
+			vector<wstring>* getlines();
 			void print(int,int);
 		private:
 			//int size_x,size_y;
-			vector<string> lines;
+			vector<wstring> lines;
 			string name;
 	};
 	//user interface element, base class of all elements, must contain print function
@@ -35,11 +53,23 @@ namespace dg{
 			void addattr(int);
 			void rmvattr(int);
 			list<int> attrs;
+			mask getmask();
+			void setmask(int,int,int,int);
+			void setmask(int,int,int,int,int);
+			bool iscustommask();
+			void setcustommask(bool);
+			int ismasked(int relx, int rely);
+			int getx();
+			int gety();
 			//int getvariant();
 		protected:
 			int x,y;
+			int size_x;
+			int size_y;
 			string handle;
 			bool functional;
+			mask iemask;
+			bool custommask = false;
 			//int ievariant;
 			
 	};
@@ -49,6 +79,7 @@ namespace dg{
 			uisprite(string,sprite*,int,int);
 			void print();
 			void print(int,int);
+			sprite* getsprite();
 		private:
 			sprite* sprite_reference;
 			
@@ -66,6 +97,7 @@ namespace dg{
 			virtual void print();
 			void add_ie(interface_element*);
 			void add_ie(string, interface_element*);
+			void add_non_visible_ie(interface_element*);
 			void remove_ie(string);
 			bool getcontrollable();
 			void setcontrollable(bool);
@@ -76,6 +108,7 @@ namespace dg{
 			void setcenter(bool);
 			bool iscenter();
 			string gethandle();
+			map<string,interface_element*> getiemap();
 		protected:
 			//if the screen is currently (or entirely) controllable, if not, the screen plays automatically, enabling animations and such
 			bool controllable = true;
@@ -85,14 +118,21 @@ namespace dg{
 			string handle;
 			map<string,interface_element*> iemap;
 			list<string> iestack;
-			bool opaque;
+			bool opaque = false;
 			bool center = false;
 			//bool bold;
 			
 	};
 	int curses_init();
 	int curses_wrapup();
-    int ioloop();
-	void printat(const char* c_str, int x, int y);
+    	int ioloop();
+	void printat(wstring outstr, int x, int y, mask iemask);
+	void printat(wstring outstr, int x, int y);
+	void test_screen_size();
+	class debugoverlay:public screen{
+		public:
+			debugoverlay();
+			void print();
+	};
 }
 #endif
