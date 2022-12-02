@@ -44,6 +44,8 @@ namespace dg{
 			virtual ~interface_element();
 			virtual void print();
 			//print relative to this coordniate
+			//input is the x and y coordinate of the element
+			//output is the element
 			virtual void print(int x, int y);
 			bool getfunctional();
 			void setfunctional(bool);
@@ -99,18 +101,23 @@ namespace dg{
 			void add_ie(string, interface_element*);
 			void add_non_visible_ie(interface_element*);
 			void remove_ie(string);
+			//get the value of controllable from protected member controllable
 			bool getcontrollable();
+			//set the controllable's value
 			void setcontrollable(bool);
 			void move_ie(string, int, int);
+			//move the screen by x and y coordinate inputted
 			void move(int,int);
 			void setloc(int,int);
 			void destruct();
+			// set the screen to center
 			void setcenter(bool);
 			bool iscenter();
 			string gethandle();
 			map<string,interface_element*> getiemap();
 		protected:
 			//if the screen is currently (or entirely) controllable, if not, the screen plays automatically, enabling animations and such
+			//at default it is set to be true
 			bool controllable = true;
 			//screen coordinates
 			int x = 0;
