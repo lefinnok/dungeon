@@ -7,7 +7,7 @@ namespace dg{
 	//class sprite;
 	//std::map<std::string,sprite> SPRITEDB;
 	void process_mem_usage(double& vm_usage, double& resident_set);
-    int loadInit();
+    	int loadInit();
 	//int spriteloopthrough();
 	int loadWrap();
 }

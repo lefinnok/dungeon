@@ -7,10 +7,12 @@ namespace dg{
 	class sprite;
 	class screen;
 	class dynamicvalue;
+	class mob;
 	extern bool DEBUG;
 	extern int EXIT;
 	extern int SCREENX;
 	extern int SCREENY;
+	extern mob* PLAYER;
 	//where loaded of sprite is stored, it can be referenced and displayed in spread instances, but don't have to store the copies in memory
 	extern std::map<std::string,sprite*> SPRITEDB;
 	//a map of initiated screen objects to store constructed screens, and be referenced by the screen stack
