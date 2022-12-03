@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <list>
 namespace dg{
 	//references and inspiration from mork borg
 	// map for converting attribute to modifer
@@ -23,6 +24,14 @@ namespace dg{
 			int getStrengthMod();
 			int getToughnessMod();	
 	};
+
+	class modifier {
+		public:
+			int type;
+			int val;
+
+	};
+
 	//can implement later if have time
 	class effect{
 		
@@ -34,11 +43,12 @@ namespace dg{
 			void cout_eqstats();
 			std::string equipname();
 			int equipbase_hp();
-			int equipbbase_ac();
+			int equipbase_ac();
 			int equipagility();
 			int equipstrength();
 			int equippresence();
 			int equiptoughness();
+
 			//called when the equipment is used against a target
 			virtual void use(mob* target);
 		protected:
@@ -66,15 +76,44 @@ namespace dg{
 		public:
 			//constructor
 			mob(std::string, int, int, int, int, int, int);
+			std::vector<equipment> eqlist;
 			//deconstructor
 			//~mob();
+			
+			// printout the stat of mob
+			//input is the protected members of mob
+			//output is the stats with the format
 			void cout_stats();
+
+			// get the mob's protected member without declaring derived classes or child classes
+			//intput is the corresponding protected member from mob
+			//output is the member but not protected
 			int mobbase_hp();
 			int mobbase_ac();
 			int mobagility();
 			int mobstrength();
 			int mobpresence();
 			int mobtoughness();
+			
+			//get the maxstats of mob
+			//input is the corresponding stats in the list of equipment
+			//output is the corresponding equipment's base stats + mob stats
+			int getmaxhealth();
+			int getmaxac();
+			int getmaxagility();
+			int getmaxstrength();
+			int getmaxpresence();
+			int getmaxtoughness();
+			
+
+			//set current stats' default is the mob maxstats
+			int result_health = getmaxhealth();
+			int result_ac = getmaxac();
+			int result_agilty = getmaxagility();
+			int result_strength = getmaxstrength();
+			int result_presence = getmaxpresence();
+			int result_toughness = getmaxtoughness();
+			
 		protected:
 			std::string name;
 			int base_hp;
