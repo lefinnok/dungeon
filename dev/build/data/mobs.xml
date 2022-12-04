@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<ClassDef FormatVersion="1">
+
+    <Class Name="Goblin Knight">
+        <agility>5</agility>
+        <presence>2</presence>
+        <strength>10</strength>
+        <toughness>10</toughness>
+        <equipments>
+            <ironhelm>1</ironhelm>
+            <mundane_longsword>1</mundane_longsword>
+            <rusted_chestplate>1</rusted_chestplate>
+        </equipments>
+        <skills>
+            <strike></strike>
+        </skills>
+    </Class>
+    
+    <Class Name="Goblin Ranger">
+        <agility>6</agility>
+        <presence>10</presence>
+        <strength>4</strength>
+        <toughness>3</toughness>
+        <equipments>
+            <cloak>1</cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <hunters_bow>1</hunters_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+    
+    <Class Name="Goblin Wizard">
+        <agility>12</agility>
+        <presence>9</presence>
+        <strength>4</strength>
+        <toughness>3</toughness>
+        <equipments>
+            <cloak>1</cloak>
+            <rotting_stick>1</rotting_stick>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>
+
+</ClassDef> 
