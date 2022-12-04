@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<ClassDef FormatVersion="1">
+
+    <Class Name="Knight">
+        <agility>10</agility>
+        <presence>3</presence>
+        <strength>16</strength>
+        <toughness>16</toughness>
+        <equipments>
+            <ironhelm>1</ironhelm>
+            <mundane_longsword>1</mundane_longsword>
+            <rusted_chestplate>1</rusted_chestplate>
+        </equipments>
+        <skills>
+            <strike></strike>
+        </skills>
+    </Class>
+    
+    <Class Name="Ranger">
+        <agility>13</agility>
+        <presence>18</presence>
+        <strength>8</strength>
+        <toughness>6</toughness>
+        <equipments>
+            <cloak>1</cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <hunters_bow>1</hunters_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+    
+    <Class Name="Wizard">
+        <agility>13</agility>
+        <presence>18</presence>
+        <strength>8</strength>
+        <toughness>6</toughness>
+        <equipments>
+            <cloak>1</cloak>
+            <rotting_stick>1</rotting_stick>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>
+
+</ClassDef> 
