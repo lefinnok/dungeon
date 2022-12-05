@@ -9,6 +9,7 @@ namespace dg{
 	class dynamicvalue;
 	class mob;
     class item;
+    extern mob* PLAYER;
 	extern bool DEBUG;
 	extern int EXIT;
 	extern int SCREENX;
@@ -25,5 +26,6 @@ namespace dg{
 	extern std::map<std::string,dynamicvalue*> VALDB;
     extern std::list<std::wstring> SYSTEMLOG;	
     void outlog(std::wstring);
+    extern std::list<mob*>ENEMIES;
 }
 #endif

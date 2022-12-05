@@ -11,7 +11,8 @@ namespace dg{
 	class mob;
     class item;
 	int EXIT;
-	bool DEBUG = true;
+    mob* PLAYER = NULL;
+	bool DEBUG = false;
 	int SCREENX;
 	int SCREENY;
 	map<string,mob*> MOBDB;
@@ -23,4 +24,5 @@ namespace dg{
 	list<string> SCREENSTACK;
     list<wstring> SYSTEMLOG;
     void outlog(wstring outstring){SYSTEMLOG.push_back(outstring);}
+    list<mob*>ENEMIES;
 }

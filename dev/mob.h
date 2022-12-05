@@ -115,7 +115,8 @@ namespace dg{
             void airound();
             list<string>* getequipments();
             map<string,item*> getusable();
-
+            bool isplayer();
+            void setplayer();
 		protected:
 			std::string handle;
 			int hitpoint;
@@ -128,6 +129,7 @@ namespace dg{
 			std::map<string,item*> inventory;
 			std::list<status_effect*> active_statuses;
 			list<modifier*> inherent_modifiers;
+            bool player = false;
 
 	};
 	
@@ -173,6 +175,19 @@ namespace dg{
             using action::action;
             int trigger(mob* actor);
     };
+    
+    class agility_attack: public action{
+        public:
+            using action::action;
+            int trigger(mob* actor);
+    };
+
+    class presence_attack: public action{
+        public:
+            using action::action;
+            int trigger(mob* actor);
+    };
+
 
 	class item{
 		public:

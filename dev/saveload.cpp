@@ -92,22 +92,22 @@ namespace dg{
 			}
 			string spath(dirEntry.path().c_str());
             string sname(dirEntry.path().filename().stem().c_str());
-			cout<<"Loading Sprite:"<<sname<<endl;
+			if(DEBUG)cout<<"Loading Sprite:"<<sname<<endl;
 			if(SPRITEDB.count(sname) != 0){
-				cout<<"Sprite duplicate found, replacing with new sprite"<<endl;
+				if(DEBUG)cout<<"Sprite duplicate found, replacing with new sprite"<<endl;
 				//delete the existing sprite at that address
 				delete(SPRITEDB[sname]);
 				map<string,sprite*>::iterator it = SPRITEDB.find(sname);
-				//Replace value instead of inserting new one (it caused a memory leak)
+				//if(DEBUG)Replace value instead of inserting new one (it caused a memory leak)
 				if(it != SPRITEDB.end()){
 					it->second = new sprite(spath,sname);
 				}
-				cout<<"Sprite Replaced"<<endl;
+				if(DEBUG)cout<<"Sprite Replaced"<<endl;
 			}else{
 				SPRITEDB.insert({sname,new sprite(spath,sname)});
-				cout<<"Sprite Created"<<endl;
+				if(DEBUG)cout<<"Sprite Created"<<endl;
 			}
-			cout<<"===Sprite Loaded==="<<endl;
+			if(DEBUG)cout<<"===Sprite Loaded==="<<endl;
 		}
 		return 0;
 	}
@@ -123,7 +123,7 @@ namespace dg{
         //cout<<ppath<<endl;
 
         if (!itemsDB.load_file(widecstrpath)){
-            cout<<"ITEM FILE MISSING, itemdefs not found"<<endl;
+            if(DEBUG)cout<<"ITEM FILE MISSING, itemdefs not found"<<endl;
             return 1;
         }
 
@@ -132,7 +132,7 @@ namespace dg{
         {
             string itemhandle = it->attribute("Name").value();
             //item* itemtemplate = NULL;
-            cout << it->name()<< " | " << it->attribute("Name").value();
+            if(DEBUG)cout << it->name()<< " | " << it->attribute("Name").value();
             string itemtype = it->name();
             xml_node action_node = it->child("action");
             action* act = NULL;
@@ -140,7 +140,7 @@ namespace dg{
                 //This could have been a map, but, too much work and crunching rn, so, NO :D
                 xml_node specific_action_node = *action_node.begin();
                 string actiontype = specific_action_node.name();
-                cout<<endl<<actiontype;
+                if(DEBUG)cout<<endl<<actiontype;
                 if(actiontype=="apply_status"){
                     map<string,string> arguments;
                     xml_node status_node = *(++(specific_action_node.begin()));
@@ -162,6 +162,22 @@ namespace dg{
                     string damage = damage_node.text().get();
                     arguments.insert({"damage_roll",damage});
                     act = new strength_attack(arguments);
+                }   
+                if(actiontype=="agility_attack"){
+                    map<string,string> arguments;
+                    xml_node specific_action_node = *action_node.begin();
+                    xml_node damage_node = specific_action_node.child("damage_roll");
+                    string damage = damage_node.text().get();
+                    arguments.insert({"damage_roll",damage});
+                    act = new agility_attack(arguments);
+                }
+                if(actiontype=="presence_attack"){
+                    map<string,string> arguments;
+                    xml_node specific_action_node = *action_node.begin();
+                    xml_node damage_node = specific_action_node.child("damage_roll");
+                    string damage = damage_node.text().get();
+                    arguments.insert({"damage_roll",damage});
+                    act = new presence_attack(arguments);
                 }
             }
             list<modifier*> modifiers;
@@ -192,10 +208,10 @@ namespace dg{
             }
 
             
-            cout << endl;
+            if(DEBUG)cout << endl;
         }
 
-        cout << endl;
+        if(DEBUG)cout << endl;
         return 0;
     
     }
@@ -209,24 +225,24 @@ namespace dg{
         //cout<<ppath<<endl;
 
         if (!eventDB.load_file(widecstrpath)){
-            cout<<"EVENT FILE MISSING, events.xml not found"<<endl;
+            if(DEBUG)cout<<"EVENT FILE MISSING, events.xml not found"<<endl;
             return 1;
         }
 
         xml_node events = eventDB.child("EventDef");
         for (xml_node_iterator it = events.begin(); it != events.end(); ++it)
         {
-            cout << "Event:" << it->attribute("Name").value();
+            if(DEBUG)cout << "Event:" << it->attribute("Name").value();
             
 
             for (xml_node_iterator cit = it->begin(); cit != it->end(); ++cit){
-                cout << endl << '\t' << cit->name() << ": " << cit->text().get();
+                if(DEBUG)cout << endl << '\t' << cit->name() << ": " << cit->text().get();
             }
 
-            cout << endl;
+            if(DEBUG)cout << endl;
         }
 
-        cout << endl;
+        if(DEBUG)cout << endl;
         return 0;
     }
 
@@ -234,7 +250,7 @@ namespace dg{
 	int loadInit(){
         filelen = get_current_dir(curDir);
         if(!filelen){
-            cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
+            if(DEBUG)cout<<"Unable to get executable directory, load unsuccessful. [are you using mac :3]"<<endl;
             return 1; 
         }
         if(loadEvents()){

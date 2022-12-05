@@ -17,7 +17,7 @@ namespace dg{
 			character_creation(std::string);
 			int execute(int key);
 	};
-
+    void advanceround();
 	class play_screen: public screen{
 		public:
 			play_screen(std::string);
@@ -25,12 +25,12 @@ namespace dg{
 			int execute(int key);
 			void updateuielements();
 			void print();
-            void advanceround();
+            //void advanceround();
 			//void setplayer(mob* player);
 		private:
 			string player_handle;
 			string status_string_handle;
-            list<mob*> enemies;
+            //list<mob*> enemies;
 	};
     
     class use_menu: public screen{

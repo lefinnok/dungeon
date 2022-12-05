@@ -6,7 +6,7 @@
         <action>
             <apply_status>
                 <target>self</target>
-                <heal Duration="5"></heal>
+                <heal Duration="5">3</heal>
             </apply_status>
         </action>
     </Consumable>
@@ -112,7 +112,7 @@
             <agility>-1</agility>
             <toughness>-1</toughness>
             <incoming_damage>-3</incoming_damage>
-            <appendage>torse</appendage>
+            <appendage>torso</appendage>
         </modifiers>
     </Equipment>
     
@@ -176,7 +176,7 @@
             <agility>1</agility>
             <toughness>1</toughness>
             <incoming_damage>2</incoming_damage>
-            <appendage>torse</appendage>
+            <appendage>head</appendage>
         </modifiers>
     </Equipment>
 
@@ -185,7 +185,7 @@
             <agility>2</agility>
             <toughness>-2</toughness>
             <incoming_damage>-3</incoming_damage>
-            <appendage>torse</appendage>
+            <appendage>torso</appendage>
         </modifiers>
     </Equipment>
 

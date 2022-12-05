@@ -35,14 +35,14 @@ namespace dg{
 	
 	dynamicvalue::~dynamicvalue(){
 		VALDB.erase(handle);
-		cout<<"Dynoval <"<<handle<<"> Deactivated"<<endl;
+		if(DEBUG)cout<<"Dynoval <"<<handle<<"> Deactivated"<<endl;
 	}
 	//DYNOINT
 	dynamicint::dynamicint(string hdl, int val){
 		handle = hdl;
 		VALDB.insert({handle,this});
 		value = val;
-		cout<<"Dynoint <"<<handle<<"> Created"<<endl;
+		if(DEBUG)cout<<"Dynoint <"<<handle<<"> Created"<<endl;
 	}
 
 	int dynamicint::getint(){
@@ -57,7 +57,7 @@ namespace dg{
 		handle = hdl;
 		VALDB.insert({handle,this});
 		value = val;
-		cout<<"Dynostring <"<<handle<<"> Created"<<endl;
+		if(DEBUG)cout<<"Dynostring <"<<handle<<"> Created"<<endl;
 	}
 	string dynamicstring::getstring(){
 		return any_cast<string>(value);
@@ -82,7 +82,7 @@ namespace dg{
 	}
 	dynamictext::~dynamictext(){
 		if(destroy_on_deconstruct){
-			cout<<"DYNOVAL DELETING"<<endl;
+			if(DEBUG)cout<<"DYNOVAL DELETING"<<endl;
 			delete(VALDB[dynamicval_handle]);
 		}
 		//delete(VALDB[dynamicval_handle]);

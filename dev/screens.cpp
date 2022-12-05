@@ -104,15 +104,17 @@ namespace dg{
 		//test player
 		mob* testplayer = new mob("test_player",10,10,23,20);
 		mob* testplayer1 = new mob("test_player", 20, 20, 20,20);
-        enemies.push_back(testplayer1);
+        ENEMIES.push_back(testplayer1);
         
-        add_ie(new statblock(*enemies.begin(),"ps_enemy_statblock_1",0,8));
+        add_ie(new statblock(*ENEMIES.begin(),"ps_enemy_statblock_1",0,8));
 	    
 		player_handle = testplayer->gethandle();
 
         MOBDB[player_handle]->additem("Health Potion");
 
         MOBDB[player_handle]->additem("Health Potion");
+        
+        testplayer->setplayer();
 
         testplayer->additem("rusted_chestplate");
         testplayer->equip("rusted_chestplate");
@@ -122,6 +124,8 @@ namespace dg{
         testplayer->equip("mundane_longsword");
         testplayer->additem("poison_dagger");
         testplayer->additem("rusted_chestplate");
+        testplayer1->additem("mundane_longsword");
+        testplayer1->equip("mundane_longsword");
         //testplayer->additem("rusted_chestplate");
         //testplayer->equip("rusted_chestplate_0");
 		//hp
@@ -184,9 +188,9 @@ namespace dg{
 		//add_ue(new uitext(wstring(L"/")+to_wstring(MOBDB[player_handle]->getmaxhitpoint()),"ps_player_max_health",iemap["ps_player_cur_health"]->getsizex()+32+1,31));
 
 	}
-    void play_screen::advanceround(){
+    void advanceround(){
         //apply status effects
-        mob* player = MOBDB[player_handle];
+        mob* player = PLAYER;
         if(!player)return;
         list<status_effect*>* active_statuses = player->getstatuslist();
         list<status_effect*> ticks;
@@ -197,7 +201,7 @@ namespace dg{
             s->tick();
         }
         //enemy round 
-        for(mob* enemy: enemies){
+        for(mob* enemy: ENEMIES){
             enemy->airound();
         }
     }
@@ -211,21 +215,21 @@ namespace dg{
                 }*/
                 use_menu* um = new use_menu("ps_use_menu",player_handle);
                 SCREENSTACK.push_back(um->gethandle());
-                advanceround();
+                //advanceround();
                 return 1;
             }
             case('i'):{
                 inventory_menu* im = new inventory_menu("ps_iv_menu",player_handle);
                 SCREENSTACK.push_back(im->gethandle());
             }
-            case('r'):{
+            /*case('r'):{
                 advanceround();
                 //advance round
                 return 1;
-            }
+            }*/
 			case('h'):{
 				MOBDB[player_handle]->modifyhitpoint(-1);
-                (*enemies.begin())->modifyhitpoint(-1);
+                (*ENEMIES.begin())->modifyhitpoint(-1);
 				return 1;
 			}
 			//escape
@@ -294,7 +298,10 @@ namespace dg{
                     mob* player = MOBDB[player_handle];
                     map<string,item*>* inventory = player->getinventory();
                     item* target_item = inventory->find(itemuse_handle)->second;
-                    target_item->use();
+                    int used = target_item->use();
+                    if(!used){
+                        advanceround();
+                    }
                     //(*(MOBDB[player_handle]->getinventory()))[itemuse_handle]->use();
                 }
                 delete(this);

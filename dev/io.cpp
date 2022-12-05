@@ -106,7 +106,7 @@ namespace dg{
 	sprite::sprite(string path, string sname){
 		ifstream istrm(path);
 		if(!istrm.is_open()){
-			cout << "failed to open " << path << '\n';
+			if(DEBUG)cout << "failed to open " << path << '\n';
 			//return 1;
 		}else{
 			string line;
@@ -120,7 +120,7 @@ namespace dg{
 			
 		}
 		name = sname;
-		cout << "Sprite <" << name << "> created."<<endl;
+		if(DEBUG)cout << "Sprite <" << name << "> created."<<endl;
 	}
 
 	//sprite deconstructor
@@ -129,7 +129,7 @@ namespace dg{
 		//for(string s: lines){
 		//	delete(&s);
 		//}
-		cout << "Sprite <"<< name << "> deconstructed."<<endl;
+		if(DEBUG)cout << "Sprite <"<< name << "> deconstructed."<<endl;
 	}
 	
 	//print sprite in window at coordinate x,y
@@ -160,7 +160,7 @@ namespace dg{
 	}
 
 	interface_element::~interface_element(){
-		cout<<"Element Deactiviated <"<<handle<<'>'<<endl;
+		if(DEBUG)cout<<"Element Deactiviated <"<<handle<<'>'<<endl;
 	}
 	string interface_element::get_handle(){
 		return handle;
@@ -264,17 +264,17 @@ namespace dg{
 	
 	//SCREEN
 	screen::screen(string handle){
-		cout<<"Building Screen <"<<handle<<">"<<endl;	int at_line = 0;
+		if(DEBUG)cout<<"Building Screen <"<<handle<<">"<<endl;	int at_line = 0;
 		opaque = false;
 		this->handle = handle;
 		ACTIVESCREENS.insert({handle,this});
-		cout<<"Screen Activated: ";
+		if(DEBUG)cout<<"Screen Activated: ";
 		if(DEBUG){
 			for(pair<string,screen*> p: ACTIVESCREENS){
 				cout << p.first << ' ' << p.second;
 			}
 		}
-		cout<<endl;
+		if(DEBUG)cout<<endl;
 	}
 
 	screen::~screen(){
@@ -302,7 +302,7 @@ namespace dg{
 
 		}
 		SCREENSTACK.remove(handle);
-		cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
+		if(DEBUG)cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
 	}
 	void screen::destruct(){
 		delete this;
@@ -492,7 +492,7 @@ namespace dg{
 			scr->print();
 		}
 		//if debug mode, draw debug overlay
-		//ACTIVESCREENS["DEBUGOVERLAY"] ->print();
+		if(DEBUG)ACTIVESCREENS["DEBUGOVERLAY"] ->print();
 		//wait for valid input and execute it
 		int exec_code = 0;
 		while(!exec_code){
