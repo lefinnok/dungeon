@@ -96,6 +96,9 @@ namespace dg{
 	/*setting the base value of a mob and its name
 	the name, base health, base armor, base agility, base presence, base strength, base toughness of the mob is input
 	the protected member of the class mob is output*/
+    /*mob::mob(string hd, int ag, int pr, int st, int tn){
+        mob(hd,ag,pr,st,tn,false);
+    }*/
 	mob::mob(string hd, int ag, int pr, int st, int tn){
 		if(MOBDB.count(hd)){
 			int handle_mod_id = 0;
@@ -113,10 +116,12 @@ namespace dg{
 		hitpoint = getmaxhitpoint();
 	}
 	mob::~mob(){
-		MOBDB.erase(handle);
+		if(!istemplate)MOBDB.erase(handle);
+        list<status_effect*> sse;
 		for(status_effect* se: active_statuses){
-			delete(se);
+			sse.push_back(se);
 		}
+        for(status_effect* se: sse){delete(se);}
         list<item*> itemstorem;
         for(pair<string,item*> i: inventory){
             itemstorem.push_back(i.second);
@@ -125,17 +130,18 @@ namespace dg{
             delete(i);
         }
 	}
+    void mob::settemplate(){istemplate=true;}
 	int mob::getcurrenthitpoint(){
         if(hitpoint>getmaxhitpoint())hitpoint=getmaxhitpoint();
 		return hitpoint;
 	}
 	int mob::getmaxhitpoint(){
-		return (getmodtoughness())<<3;
+		return (getmodtoughness())<<2;
 		
 	}
 	list<status_effect*>* mob::getstatuslist(){return &active_statuses;}
 	void mob::modifyhitpoint(int amount){
-		if((hitpoint+amount)<=0){hitpoint=0;dead();return;}
+		if((hitpoint+amount)<=0){hitpoint=0;return;}
 		int max = getmaxhitpoint();
 		if((hitpoint+amount)>max){hitpoint=max;return;}
 		hitpoint+=amount;
@@ -155,7 +161,33 @@ namespace dg{
 	}
 	string mob::gethandle(){return handle;}
 	void mob::dead(){
+        if(!player){
+            ENEMIES.clear();
+            mob* newmob = randommobfromtemplate();
+            ENEMIES.push_back(newmob);
+            //delete(this);
+        }
 	}
+
+    mob* mob::copy(){
+        mob* newmob = new mob(handle,attr.agility,attr.strength,attr.presence,attr.toughness);
+        //map<string,item*>* newmobinv = newmob->getinventory();
+        for(pair<string,item*> p: inventory){
+            newmob->additem(p.first);
+        }
+        //list<string>* newmobeqps = newmob->getequipments();
+        for(string eqp: equipments){
+            newmob->equip(eqp);
+        }
+        return newmob;
+    }
+    
+	mob* randommobfromtemplate(){
+        int mob_code = rand()%MOBTEMPLATES.size();
+        map<string,mob*>::iterator mit = MOBTEMPLATES.begin();
+        advance(mit,mob_code);
+        return (mit->second)->copy();
+    }
 
     void mob::additem(string itemname){
         item* itemtemplate = ITEMDB[itemname];
@@ -414,6 +446,72 @@ namespace dg{
         return 0;
 	}
 
+    int spell_cast::trigger(mob* actor){
+        string target_handle = gettargethandle(actor);
+        mob* target_mob = MOBDB[target_handle];
+        
+        int strength_roll = rand()%20+1 + actor->getpresencemod();
+        int agility_roll = rand()%20+1 + target_mob->getagilitymod();
+        if(agility_roll>strength_roll){
+            outlog(towstring(actor->gethandle()) + wstring(L" cast a spell against ") + towstring(target_mob->gethandle())+ wstring(L" but missed PRS") + to_wstring(strength_roll)+wstring(L" vs AGL"+to_wstring(agility_roll)));
+            return 0;
+        }
+
+        int amount = 1;
+        int damage = 1;
+        if(arguments.count("damage_roll")){
+            string amount_buf;
+            string damage_buf;
+            bool amtdmg = 1;
+            for(char c: arguments["damage_roll"]){
+                if(c=='d'){amtdmg=0;continue;}
+                if(amtdmg){
+                    amount_buf.push_back(c);
+                }else{
+                    damage_buf.push_back(c);
+                }
+                
+            }
+            amount = stoi(amount_buf);
+            damage = stoi(damage_buf);
+        }
+
+        int rolled_damage = 0;
+        for(int i=0;i<amount;i++){
+            rolled_damage+=rand()%damage+1;
+        }
+
+        //modifiers
+        for(modifier* mod: actor->gettotalmodifiers()){
+            if(mod->type=="outgoing_damage")rolled_damage+=stoi(mod->val);
+        }
+        for(modifier* mod: target_mob->gettotalmodifiers()){
+            if(mod->type=="incoming_damage")rolled_damage+=stoi(mod->val);
+        }
+        outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" dealing ") + to_wstring(rolled_damage)+wstring(L" points of damage"));
+        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
+        /*if(arguments.count("value")){
+        outlog();
+        outlog();
+            val = stoi(arguments["value"]);
+        }
+        int dur = -1;
+        if(arguments.count("duration")){
+            dur = stoi(arguments["duration"]);
+        }
+        string target_handle = VALDB[ds_handle]->getstring();
+        if(arguments.count("status_type")&&MOBDB.count(target_handle)){
+            string status_type = arguments["status_type"];
+            if(status_type=="heal"){
+                heal* h = new heal("Heal",MOBDB[target_handle],dur,val);
+                MOBDB[target_handle]->addstatus(h);
+            }
+            return 1;
+        }*/
+        return 0;
+
+    }
+
 	int strength_attack::trigger(mob* actor){
 		//all apply statuses should only be used on mobs
         string target_handle = gettargethandle(actor);
@@ -457,8 +555,9 @@ namespace dg{
         for(modifier* mod: target_mob->gettotalmodifiers()){
             if(mod->type=="incoming_damage")rolled_damage+=stoi(mod->val);
         }
-        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
+
         outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" dealing ") + to_wstring(rolled_damage)+wstring(L" points of damage"));
+        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
         /*if(arguments.count("value")){
         outlog();
         outlog();
@@ -524,8 +623,8 @@ namespace dg{
         for(modifier* mod: target_mob->gettotalmodifiers()){
             if(mod->type=="incoming_damage")rolled_damage+=stoi(mod->val);
         }
-        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
         outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" dealing ") + to_wstring(rolled_damage)+wstring(L" points of damage"));
+        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
         /*if(arguments.count("value")){
         outlog();
         outlog();
@@ -554,7 +653,7 @@ namespace dg{
         int strength_roll = rand()%20+1 + actor->getpresencemod();
         int agility_roll = rand()%20+1 + target_mob->getagilitymod();
         if(agility_roll>strength_roll){
-            outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" but missed AGL") + to_wstring(strength_roll)+wstring(L" vs AGL"+to_wstring(agility_roll)));
+            outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" but missed PRS") + to_wstring(strength_roll)+wstring(L" vs AGL"+to_wstring(agility_roll)));
             return 0;
         }
 
@@ -589,8 +688,8 @@ namespace dg{
         for(modifier* mod: target_mob->gettotalmodifiers()){
             if(mod->type=="incoming_damage")rolled_damage+=stoi(mod->val);
         }
-        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
         outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" dealing ") + to_wstring(rolled_damage)+wstring(L" points of damage"));
+        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
         /*if(arguments.count("value")){
         outlog();
         outlog();

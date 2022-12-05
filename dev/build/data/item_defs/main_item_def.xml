@@ -400,6 +400,7 @@
         <modifiers>
             <spell_apply_status>burning,2</spell_apply_status>
         </modifiers>
+	    <dropchance>10</dropchance>
     </Spell>
 
     <Equipment Name="rusted_helm">
@@ -459,6 +460,7 @@
         <modifiers>
             <spell_apply_status>rot,2</spell_apply_status>
         </modifiers>
+	    <dropchance>10</dropchance>
     </Spell>
 
     <Spell Name="strike">
@@ -468,6 +470,7 @@
                 <damage_roll>1d5</damage_roll>
             </spell_cast>
         </action>
+	    <dropchance>10</dropchance>
     </Spell>
 
     <Spell Name="shoot">
@@ -477,6 +480,7 @@
                 <damage_roll>1d5</damage_roll>
             </spell_cast>
         </action>
+	    <dropchance>10</dropchance>
     </Spell>
 
     <Spell Name="stab">
@@ -486,6 +490,7 @@
                 <damage_roll>1d2</damage_roll>
             </spell_cast>
         </action>
+	    <dropchance>10</dropchance>
     </Spell>
     
     <Equipment Name="ironhelm">

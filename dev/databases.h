@@ -14,6 +14,7 @@ namespace dg{
 	extern int EXIT;
 	extern int SCREENX;
 	extern int SCREENY;
+    extern std::map<std::string,mob*> MOBTEMPLATES;
 	extern std::map<std::string,mob*> MOBDB;
     extern std::map<std::string,item*> ITEMDB;
 	//where loaded of sprite is stored, it can be referenced and displayed in spread instances, but don't have to store the copies in memory
@@ -27,5 +28,6 @@ namespace dg{
     extern std::list<std::wstring> SYSTEMLOG;	
     void outlog(std::wstring);
     extern std::list<mob*>ENEMIES;
+    extern std::map<std::string,int> LOOTTABLE; 
 }
 #endif

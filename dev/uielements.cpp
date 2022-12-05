@@ -163,6 +163,7 @@ namespace dg{
     /*statblock::~statblock(){
 
     }*/
+    void statblock::setmob(mob* tm){target_mob=tm;}
     statblock::statblock(mob* target, string handle, int xl, int yl):interface_element(handle,xl,yl){
         target_mob = target;
     }

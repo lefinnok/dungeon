@@ -83,6 +83,44 @@ namespace dg{
 				SCREENSTACK.push_back(dss->gethandle());
 				return 1;
 			}
+            case(10):{
+                string selected_class = VALDB["cc_class_edit"]->getstring();
+                string selected_name = VALDB["cc_name_edit"]->getstring();
+                if(selected_class=="KNIGHT"){
+                    mob* newplayer = new mob(selected_name,10,3,16,16);
+                    newplayer->additem("ironhelm");
+                    newplayer->additem("mundane_longsword");
+                    newplayer->additem("rusted_chestplate");
+                    newplayer->additem("Health Potion");
+                    newplayer->additem("Health Potion");
+
+                    newplayer->setplayer();
+                }
+                if(selected_class=="RANGER"){
+
+                    mob* newplayer = new mob(selected_name,18,13,10,6);
+                    newplayer->additem("cloak");
+                    newplayer->additem("makeshift_dagger");
+                    newplayer->additem("hunters_bow");
+                    newplayer->additem("shoot");
+                    newplayer->additem("stab");
+                    newplayer->additem("firstaid");
+                    newplayer->setplayer();
+                }
+                if(selected_class=="WIZARD"){
+
+                    mob* newplayer = new mob(selected_name,13,18,8,6);
+                    newplayer->additem("cloak");
+                    newplayer->additem("rotting_stick");
+                    newplayer->additem("firebolt");
+                    newplayer->setplayer();
+                }
+                play_screen* ps = new play_screen("play_screen");
+                SCREENSTACK.push_back(ps->gethandle());
+                delete(ACTIVESCREENS["title_screen"]);
+                delete(this);
+                return 1;
+            }
 			default:{
 				return 0;
 			}
@@ -102,32 +140,35 @@ namespace dg{
         add_ie(new uisprite("ps_dungeon",SPRITEDB["dungeon"],0,0));
         add_ie(new playlog(61,6,"ps_play_log",0,42));
 		//test player
-		mob* testplayer = new mob("test_player",10,10,23,20);
-		mob* testplayer1 = new mob("test_player", 20, 20, 20,20);
-        ENEMIES.push_back(testplayer1);
+		//mob* testplayer = new mob("test_player",10,10,23,20);
+		mob* init_enemy = randommobfromtemplate();//new mob("test_player", 20, 20, 20,20);
+        ENEMIES.push_back(init_enemy);
         
         add_ie(new statblock(*ENEMIES.begin(),"ps_enemy_statblock_1",0,8));
 	    
-		player_handle = testplayer->gethandle();
+		player_handle = PLAYER->gethandle();
 
-        MOBDB[player_handle]->additem("Health Potion");
+        //MOBDB[player_handle]->additem("Health Potion");
 
-        MOBDB[player_handle]->additem("Health Potion");
+        //MOBDB[player_handle]->additem("Health Potion");
         
-        testplayer->setplayer();
+        //testplayer->setplayer();
 
-        testplayer->additem("rusted_chestplate");
-        testplayer->equip("rusted_chestplate");
-        testplayer1->additem("rusted_chestplate");
-        testplayer1->equip("rusted_chestplate");
-        testplayer->additem("mundane_longsword");
-        testplayer->equip("mundane_longsword");
-        testplayer->additem("poison_dagger");
-        testplayer->additem("rusted_chestplate");
-        testplayer1->additem("mundane_longsword");
-        testplayer1->equip("mundane_longsword");
+        //testplayer->additem("rusted_chestplate");
+        //testplayer->equip("rusted_chestplate");
+        //testplayer1->additem("rusted_chestplate");
+        //testplayer1->equip("rusted_chestplate");
+        //testplayer->additem("mundane_longsword");
+        //testplayer->equip("mundane_longsword");
+        //testplayer->additem("poison_dagger");
+        //testplayer->additem("rusted_chestplate");
+        //testplayer1->additem("mundane_longsword");
+        //testplayer1->equip("mundane_longsword");
         //testplayer->additem("rusted_chestplate");
         //testplayer->equip("rusted_chestplate_0");
+        
+        
+
 		//hp
         int curhp = MOBDB[player_handle]->getcurrenthitpoint();
 		int maxhp = MOBDB[player_handle]->getmaxhitpoint();
@@ -157,10 +198,34 @@ namespace dg{
         add_ie(new uiprogressbar2(20,0,20,"ps_player_tgh_bar",39,statusy+7));
 	}
 
-
+    void getloot(){
+        for(pair<string,int> p: LOOTTABLE){
+            string item_handle = p.first;
+            int getitem = rand()%100;
+            if(getitem<p.second){
+                PLAYER->additem(p.first);
+                outlog(wstring(L"You have found <")+towstring(p.first)+wstring(L"> on your slain foe"));
+                break;
+            }
+        }
+    }
 	void play_screen::updateuielements(){
         mob* player = MOBDB[player_handle];
+        if(player->getcurrenthitpoint()<=0){exit(0);}
+        list<mob*> dms;
+        for(pair<string,mob*> m: MOBDB){
+            if(m.second->getcurrenthitpoint()<=0)dms.push_back(m.second);
+        }
+        for(mob* m: dms){
+           m->dead();
+           MOBDB.erase(m->gethandle());
+           //delete(m);
+           getloot();
+
+           //I know, memory leakage, but at this point? i can't care, not don't, but can't
+        }
         if(!player)return;
+        ((statblock*)iemap["ps_enemy_statblock_1"])->setmob(*ENEMIES.begin());
 		int curhp = MOBDB[player_handle]->getcurrenthitpoint();
 		int maxhp = MOBDB[player_handle]->getmaxhitpoint();
         int agl = player->getmodagility();
@@ -200,10 +265,14 @@ namespace dg{
         for(status_effect* s: ticks){
             s->tick();
         }
-        //enemy round 
+        //enemy round
         for(mob* enemy: ENEMIES){
+            if(!enemy)break;
             enemy->airound();
         }
+    }
+    void cleanMOBDB(){
+
     }
 	int play_screen::execute(int key){
 		//updateuielements();
@@ -228,7 +297,7 @@ namespace dg{
                 return 1;
             }*/
 			case('h'):{
-				MOBDB[player_handle]->modifyhitpoint(-1);
+				//MOBDB[player_handle]->modifyhitpoint(-1);
                 (*ENEMIES.begin())->modifyhitpoint(-1);
 				return 1;
 			}
@@ -295,7 +364,7 @@ namespace dg{
             case(10):{
                 if(!(selector->empty)){
                     string itemuse_handle = optioncodetoinventoryhandle[selector->option_code];
-                    mob* player = MOBDB[player_handle];
+                    mob* player = PLAYER;
                     map<string,item*>* inventory = player->getinventory();
                     item* target_item = inventory->find(itemuse_handle)->second;
                     int used = target_item->use();

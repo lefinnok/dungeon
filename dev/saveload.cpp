@@ -179,6 +179,15 @@ namespace dg{
                     arguments.insert({"damage_roll",damage});
                     act = new presence_attack(arguments);
                 }
+
+                if(actiontype=="spell_cast"){
+                    map<string,string> arguments;
+                    xml_node specific_action_node = *action_node.begin();
+                    xml_node damage_node = specific_action_node.child("damage_roll");
+                    string damage = damage_node.text().get();
+                    arguments.insert({"damage_roll",damage});
+                    act = new spell_cast(arguments);
+                }
             }
             list<modifier*> modifiers;
             xml_node modifier_node = it->child("modifiers");
@@ -194,19 +203,25 @@ namespace dg{
             }
             tags.push_back(itemtype);
             //modifiers.push_back(new modifier("placeholder",-1));
+            xml_node droprate = it->child("dropchance");
+            if(droprate){
+                int dropchance = stoi(droprate.text().get());
+                LOOTTABLE.insert({itemhandle,dropchance});
+            }
             if(itemtype=="Consumable"){
                 item* consumabletemplate = new consumable(itemhandle,act,modifiers,tags);
                 consumabletemplate->setistemplate(true);
-
+                 
                 ITEMDB.insert({itemhandle,consumabletemplate});
             }
-            if(itemtype=="Equipment"){
+            if(itemtype=="Equipment"||itemtype=="Spell"){
                 item* generaltemplate = new item(itemhandle,act,modifiers,tags);
                 generaltemplate->setistemplate(true);
 
                 ITEMDB.insert({itemhandle,generaltemplate});
             }
-
+            
+            
             
             if(DEBUG)cout << endl;
         }
@@ -214,6 +229,56 @@ namespace dg{
         if(DEBUG)cout << endl;
         return 0;
     
+    }
+
+    int loadMobs(){
+        xml_document mobtemplateDB;
+        
+        string path = string(curDir,filelen);
+        string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/mobs.xml";
+        wstring widestr = std::wstring(ppath.begin(), ppath.end());
+        const wchar_t* widecstrpath = widestr.c_str();
+        cout<<ppath<<endl;
+
+        if (!mobtemplateDB.load_file(widecstrpath)){
+            if(DEBUG)cout<<"MOB FILE MISSING, mobs.xml not found"<<endl;
+            return 1;
+        }
+
+        xml_node mobs = mobtemplateDB.child("ClassDef");
+        
+        
+        for (xml_node_iterator it = mobs.begin(); it != mobs.end(); ++it)
+        {
+            xml_node aglN = it->child("agility");
+            xml_node preN = it->child("presence");
+            xml_node strN = it->child("strength");
+            xml_node touN = it->child("toughness");
+            string mobtemplatename = it->attribute("Name").value();
+            int agl = stoi(aglN.text().get());
+            int pre = stoi(preN.text().get());
+            int str = stoi(strN.text().get());
+            int tou = stoi(touN.text().get());
+            mob* mobtemplate = new mob(mobtemplatename,agl,pre,str,tou);
+            xml_node eqs = it->child("equipments");
+            xml_node skl = it->child("skills");
+            for (xml_node_iterator cit = eqs.begin(); cit != eqs.end(); ++cit){
+                mobtemplate->additem(cit->name());
+                
+            }
+            for(pair<string,item*>p:*mobtemplate->getinventory()){
+                mobtemplate->equip(p.first);
+            }
+            for (xml_node_iterator cit = skl.begin(); cit != skl.end(); ++cit){
+                mobtemplate->additem(cit->name());
+            }
+            MOBTEMPLATES.insert({mobtemplatename,mobtemplate});
+            MOBDB.erase(mobtemplatename);
+            mobtemplate->settemplate();
+
+        }
+
+        return 0;
     }
     int loadEvents(){
         xml_document eventDB;
@@ -260,6 +325,9 @@ namespace dg{
 			return 1;
 		}
         if(loadItems()){
+            return 1;
+        }
+        if(loadMobs()){
             return 1;
         }
         return 0;

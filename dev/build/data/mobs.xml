@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-
 <ClassDef FormatVersion="1">
 
     <Class Name="Goblin_Knight">
@@ -55,7 +54,7 @@
         <equipments>
             <ironhelm>1</ironhelm>
             <double_axe>1</double_axe>
-            <guard_armor>1</guard_armorr>
+            <guard_armor>1</guard_armor>
         </equipments>
         <skills>
             <strike></strike>

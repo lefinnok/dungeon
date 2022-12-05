@@ -15,6 +15,7 @@ namespace dg{
 	bool DEBUG = false;
 	int SCREENX;
 	int SCREENY;
+    map<string,mob*> MOBTEMPLATES;
 	map<string,mob*> MOBDB;
     map<string,item*> ITEMDB;
 	map<string,sprite*> SPRITEDB;
@@ -25,4 +26,5 @@ namespace dg{
     list<wstring> SYSTEMLOG;
     void outlog(wstring outstring){SYSTEMLOG.push_back(outstring);}
     list<mob*>ENEMIES;
+    map<string,int>LOOTTABLE;
 }

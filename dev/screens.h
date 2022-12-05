@@ -104,6 +104,7 @@ namespace dg{
 			//int maxoption;
 			//int option_code = 0;
 	};
+    void cleanMOBDB();
     
 }
 #endif

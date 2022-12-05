@@ -7,18 +7,20 @@ This is the main script
 #include "saveload.h"
 #include "screens.h"
 #include "uielements.h"
+#include <time.h>
 using namespace std;
 using namespace dg;
 
 //MAIN GAME INITIALIZATION
 int main_init(){
+    srand(time(NULL));
 	EXIT = 0;
 	loadInit();
 	curses_init();
-	//new titlescreen("title_screen");
-	//SCREENSTACK.push_back("title_screen");
-	new play_screen("play_screen");
-	SCREENSTACK.push_back("play_screen");
+	new titlescreen("title_screen");
+	SCREENSTACK.push_back("title_screen");
+	//new play_screen("play_screen");
+	//SCREENSTACK.push_back("play_screen");
 	//printat("what is the problem?",8,16,iemask());
 	return 0;
 }

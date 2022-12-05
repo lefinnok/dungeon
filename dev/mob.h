@@ -53,6 +53,7 @@ namespace dg{
 	class mob{
 		public:
 			//constructor
+            mob(std::string,int,int,int,int,bool);
 			mob(std::string, int, int, int, int);
 			~mob();
 
@@ -117,6 +118,8 @@ namespace dg{
             map<string,item*> getusable();
             bool isplayer();
             void setplayer();
+            mob* copy();
+            void settemplate();
 		protected:
 			std::string handle;
 			int hitpoint;
@@ -130,10 +133,10 @@ namespace dg{
 			std::list<status_effect*> active_statuses;
 			list<modifier*> inherent_modifiers;
             bool player = false;
+            bool istemplate = false;
 
 	};
-	
-
+    mob* randommobfromtemplate();
 	class status_effect{
 		public:
 			status_effect(string name, mob* host,int duration, int val);
@@ -183,6 +186,12 @@ namespace dg{
     };
 
     class presence_attack: public action{
+        public:
+            using action::action;
+            int trigger(mob* actor);
+    };
+
+    class spell_cast: public action{
         public:
             using action::action;
             int trigger(mob* actor);
