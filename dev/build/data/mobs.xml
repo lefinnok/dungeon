@@ -2,7 +2,7 @@
 
 <ClassDef FormatVersion="1">
 
-    <Class Name="Goblin Knight">
+    <Class Name="Goblin_Knight">
         <agility>5</agility>
         <presence>2</presence>
         <strength>10</strength>
@@ -16,8 +16,53 @@
             <strike></strike>
         </skills>
     </Class>
+	
+    <Class Name="Evil_Knight">
+        <agility>5</agility>
+        <presence>2</presence>
+        <strength>14</strength>
+        <toughness>14</toughness>
+        <equipments>
+            <ironhelm>1</ironhelm>
+            <mundane_longsword>1</mundane_longsword>
+            <grim_armor>1</grim_armor>
+        </equipments>
+        <skills>
+            <strike></strike>
+        </skills>
+    </Class>
+	
+    <Class Name="Zombie_Knight">
+        <agility>2</agility>
+        <presence>1</presence>
+        <strength>14</strength>
+        <toughness>14</toughness>
+        <equipments>
+            <ironhelm>1</ironhelm>
+            <fighers_binding>1</fighers_binding>
+            <grim_armor>1</grim_armor>
+        </equipments>
+        <skills>
+            <strike></strike>
+        </skills>
+    </Class>
+	
+    <Class Name="Epic_Knight">
+        <agility>7</agility>
+        <presence>7</presence>
+        <strength>18</strength>
+        <toughness>18</toughness>
+        <equipments>
+            <ironhelm>1</ironhelm>
+            <double_axe>1</double_axe>
+            <guard_armor>1</guard_armorr>
+        </equipments>
+        <skills>
+            <strike></strike>
+        </skills>
+    </Class>
     
-    <Class Name="Goblin Ranger">
+    <Class Name="Goblin_Ranger">
         <agility>6</agility>
         <presence>10</presence>
         <strength>4</strength>
@@ -33,8 +78,93 @@
             <firstaid></firstaid>
         </skills>
     </Class>
+	
+	    <Class Name="Evil_Ranger">
+        <agility>7</agility>
+        <presence>10</presence>
+        <strength>4</strength>
+        <toughness>2</toughness>
+        <equipments>
+            <evocation_cloak>1</evocation_cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <bubble_bow>1</bubble_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+	
+	    <Class Name="Zombie_Ranger">
+        <agility>7</agility>
+        <presence>10</presence>
+        <strength>4</strength>
+        <toughness>2</toughness>
+        <equipments>
+            <ember_cloak>1</ember_cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <bubble_bow>1</bubble_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+	
+	    <Class Name="Epic_Ranger">
+        <agility>7</agility>
+        <presence>10</presence>
+        <strength>4</strength>
+        <toughness>5</toughness>
+        <equipments>
+            <ember_cloak>1</ember_cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <bubble_bow>1</bubble_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+	
+	    <Class Name="Trained_Ranger">
+        <agility>10</agility>
+        <presence>10</presence>
+        <strength>4</strength>
+        <toughness>5</toughness>
+        <equipments>
+            <evocation_cloak>1</evocation_cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <bubble_bow>1</bubble_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
+	
+	    <Class Name="Spider">
+        <agility>10</agility>
+        <presence>10</presence>
+        <strength>10</strength>
+        <toughness>10</toughness>
+        <equipments>
+            <cloak>1</cloak>
+            <makeshift_dagger>1</makeshift_dagger>
+            <hunters_bow>1</hunters_bow>
+        </equipments>
+        <skills>
+            <shoot></shoot>
+            <stab></stab>
+            <firstaid></firstaid>
+        </skills>
+    </Class>
     
-    <Class Name="Goblin Wizard">
+    <Class Name="Goblin_Wizard">
         <agility>12</agility>
         <presence>9</presence>
         <strength>4</strength>
@@ -48,5 +178,65 @@
             <rotting_mist></rotting_mist>
         </skills>
     </Class>
+    
+    <Class Name="Evil_Wizard">
+        <agility>18</agility>
+        <presence>10</presence>
+        <strength>7</strength>
+        <toughness>7</toughness>
+        <equipments>
+            <ember_cloak>1</ember_cloak>
+            <rotting_stick>1</rotting_stick>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>
+    
+    <Class Name="Zombie_Wizard">
+        <agility>5</agility>
+        <presence>7</presence>
+        <strength>4</strength>
+        <toughness>3</toughness>
+        <equipments>
+            <evocation_cloak>1</evocation_cloak>
+            <rotting_stick>1</rotting_stick>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>
+	
+    <Class Name="Fire_Wizard">
+        <agility>6</agility>
+        <presence>8</presence>
+        <strength>5</strength>
+        <toughness>4</toughness>
+        <equipments>
+            <evocation_cloak>1</evocation_cloak>
+            <burning_staff>1</burning_staff>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>
+	
+    <Class Name="Rathead_Wizard">
+        <agility>6</agility>
+        <presence>8</presence>
+        <strength>5</strength>
+        <toughness>4</toughness>
+        <equipments>
+            <evocation_cloak>1</evocation_cloak>
+            <rat_staff>1</rat_staff>
+        </equipments>
+        <skills>
+            <firebolt></firebolt>
+            <rotting_mist></rotting_mist>
+        </skills>
+    </Class>  
 
 </ClassDef> 
