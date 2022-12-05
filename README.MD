@@ -11,7 +11,7 @@ Defeat endless amount of random generated dungeons, if the character die, the us
 
 Description:
 -user run the game by typing ./io
--the game prints out some welcome words(e.g Hello adventurers....)
+-the game prints out the title screen and click n to start a new character or c to continue with old character.
 -the game asks the user to type in the username e.g "Sorry I forget what is your name, can you say it again?" and user inputs the username and presses enter
 -the game opens the saveload file and check if the username is there, 
  If yes then print out "Hi xxxx, here is your stuff" and print out his stat as well as last time's progress
