@@ -9,6 +9,7 @@
                 <heal Duration="5">3</heal>
             </apply_status>
         </action>
+	<dropchance>90</dropchance>
     </Consumable>
 
     <Consumable Name="Lesser Poison">
@@ -18,6 +19,7 @@
                 <poison_damage Duration="5">3</poison_damage>
             </add_modifier>
         </action>
+	<dropchance>80</dropchance>
     </Consumable>
 
 
@@ -29,6 +31,7 @@
                 <damage>1</damage>
             </add_modifier>
         </action>
+	<dropchance>70</dropchance>
     </Consumable>
 
     <Equipment Name="mundane_longsword">
@@ -45,8 +48,163 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="fighers_binding">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d5</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="growing_stick">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d8</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>10</dropchance>
     </Equipment>
 
+    <Equipment Name="battle_stick">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d10</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+
+    <Equipment Name="anchor">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d12</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>5</dropchance>
+    </Equipment>
+	
+    <Equipment Name="axe">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d5</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="double_axe">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d8</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>15</dropchance>
+    </Equipment>
+	
+    <Equipment Name="cursed_axe">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d12</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>15</dropchance>
+    </Equipment>
+	
+    <Equipment Name="whirlwind">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d12</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>15</dropchance>
+    </Equipment>
+	
+    <Equipment Name="spear">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d5</damage_roll>
+            </strength_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
     <Equipment Name="poison_dagger">
         <action>
             <agility_attack>
@@ -62,8 +220,26 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
+	<dropchance>20</dropchance>
     </Equipment>
 
+    <Equipment Name="bubble_bow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d7</damage_roll>
+            </presence_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+	<dropchance>25</dropchance>
+    </Equipment>
+	
     <Equipment Name="hunters_bow">
         <action>
             <presence_attack>
@@ -78,6 +254,75 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="master_bow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d10</damage_roll>
+            </presence_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="long_bow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d8</damage_roll>
+            </presence_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="harp_crossbow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d12</damage_roll>
+            </presence_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+    <Equipment Name="cursed_crossbow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d12</damage_roll>
+            </presence_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+	<dropchance>10</dropchance>
     </Equipment>
 
     <Equipment Name="rotten_staff">
@@ -93,6 +338,56 @@
             <weapon></weapon>
             <spell_focus></spell_focus>
         </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="rat_staff">
+        <action>
+            <presence_spell>
+            </presence_spell>
+        </action>
+        <modifiers>
+            <spell_apply_status>rot,5</spell_apply_status>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <spell_focus></spell_focus>
+        </tags>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+
+    <Equipment Name="burning_staff">
+        <action>
+            <presence_spell>
+            </presence_spell>
+        </action>
+        <modifiers>
+            <spell_apply_status>burning,3</spell_apply_status>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <spell_focus></spell_focus>
+        </tags>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="hellfire_staff">
+        <action>
+            <presence_spell>
+            </presence_spell>
+        </action>
+        <modifiers>
+            <spell_apply_status>burning,5</spell_apply_status>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <spell_focus></spell_focus>
+        </tags>
+	<dropchance>10</dropchance>
     </Equipment>
 
     <Spell Name="fire_bolt">
@@ -107,6 +402,26 @@
         </modifiers>
     </Spell>
 
+    <Equipment Name="rusted_helm">
+        <modifiers>
+            <agility>-1</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>30</dropchance>
+    </Equipment>
+	
+    <Equipment Name="rusted_shoe">
+        <modifiers>
+            <agility>-1</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>30</dropchance>
+    </Equipment>	
+
     <Equipment Name="rusted_chestplate">
         <modifiers>
             <agility>-1</agility>
@@ -114,6 +429,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torso</appendage>
         </modifiers>
+	<dropchance>30</dropchance>
     </Equipment>
     
     <Equipment Name="makeshift_dagger">
@@ -130,6 +446,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
+	<dropchance>20</dropchance>
     </Equipment>
     
     <Spell Name="rotting_mist">
@@ -178,7 +495,28 @@
             <incoming_damage>2</incoming_damage>
             <appendage>head</appendage>
         </modifiers>
+	<dropchance>20</dropchance>
     </Equipment>
+
+    <Equipment Name="iron_shoe">
+        <modifiers>
+            <agility>1</agility>
+            <toughness>1</toughness>
+            <incoming_damage>2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="iron_chestplate">
+        <modifiers>
+            <agility>1</agility>
+            <toughness>1</toughness>
+            <incoming_damage>2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment>	
 
     <Equipment Name="cloak">
         <modifiers>
@@ -187,7 +525,108 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torso</appendage>
         </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment>
+    
+    <Equipment Name="ember_cloak">
+        <modifiers>
+            <agility>3</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment>
+	
+    <Equipment Name="evocation_cloak">
+        <modifiers>
+            <agility>2</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
     </Equipment>
 
+    <Equipment Name="verdant_cloak">
+        <modifiers>
+            <agility>2</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment> 
+
+    <Equipment Name="grim_armor">
+        <modifiers>
+            <agility>3</agility>
+            <toughness>1</toughness>
+            <incoming_damage>-1</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>20</dropchance>
+    </Equipment>
+
+    <Equipment Name="wither_armor">
+        <modifiers>
+            <agility>3</agility>
+            <toughness>2</toughness>
+            <incoming_damage>-1</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+    <Equipment Name="guard_armor">
+        <modifiers>
+            <agility>1</agility>
+            <toughness>3</toughness>
+            <incoming_damage>-2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+    <Equipment Name="renegade_armor">
+        <modifiers>
+            <agility>1</agility>
+            <toughness>3</toughness>
+            <incoming_damage>-1</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>10</dropchance>
+    </Equipment>
+	
+    <Equipment Name="ocelot_armor">
+        <modifiers>
+            <agility>3</agility>
+            <toughness>1</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>10</dropchance>
+    </Equipment>
+
+	
+    <Equipment Name="nature_armor">
+        <modifiers>
+            <agility>3</agility>
+            <toughness>2</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>5</dropchance>
+    </Equipment>
+	
+    <Equipment Name="reinforced_mail">
+        <modifiers>
+            <agility>2</agility>
+            <toughness>3</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+	<dropchance>5</dropchance>
+    </Equipment>
 
 </ItemDef>
