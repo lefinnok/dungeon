@@ -5,8 +5,8 @@
     <Consumable Name="Health Potion">
         <action>
             <apply_status>
-                <target>mob</target>
-                <heal Duration="5">2</heal>
+                <target>self</target>
+                <heal Duration="5"></heal>
             </apply_status>
         </action>
     </Consumable>

@@ -5,8 +5,8 @@
     <Consumable Name="Health Potion">
         <action>
             <apply_status>
-                <target>self</target>
-                <heal Duration="5"></heal>
+                <target>mob</target>
+                <heal Duration="5">2</heal>
             </apply_status>
         </action>
     </Consumable>
@@ -38,6 +38,9 @@
                 <damage_roll>1d8</damage_roll>
             </strength_attack>
         </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
         <tags>
             <weapon></weapon>
             <melee></melee>
@@ -52,6 +55,7 @@
             </agility_attack>
         </action>
         <modifiers>
+            <appendage>hand</appendage>
             <poison_damage>3</poison_damage>
         </modifiers>
         <tags>
@@ -67,6 +71,9 @@
                 <damage_roll>1d8</damage_roll>
             </presence_attack>
         </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
         <tags>
             <weapon></weapon>
             <ranged></ranged>
@@ -79,6 +86,7 @@
             </presence_spell>
         </action>
         <modifiers>
+            <appendage>hand</appendage>
             <spell_apply_status>rot,3</spell_apply_status>
         </modifiers>
         <tags>
@@ -101,6 +109,7 @@
 
     <Equipment Name="rusted_chestplate">
         <modifiers>
+            <appendage>torso</appendage>
             <agility>-1</agility>
             <toughness>-1</toughness>
             <incoming_damage>-3</incoming_damage>

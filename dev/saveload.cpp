@@ -155,6 +155,14 @@ namespace dg{
                     act = new apply_status(arguments);
                     //cout<<endl<<duration;
                 }
+                if(actiontype=="strength_attack"){
+                    map<string,string> arguments;
+                    xml_node specific_action_node = *action_node.begin();
+                    xml_node damage_node = specific_action_node.child("damage_roll");
+                    string damage = damage_node.text().get();
+                    arguments.insert({"damage_roll",damage});
+                    act = new strength_attack(arguments);
+                }
             }
             list<modifier*> modifiers;
             xml_node modifier_node = it->child("modifiers");

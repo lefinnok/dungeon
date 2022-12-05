@@ -48,10 +48,16 @@ namespace dg{
             ~inventory_menu();
             inventory_menu(std::string,string player_handle);
             int execute(int key);
+            void updateuielements();
+            void print();
         private:
             string player_handle;
+            map<string, item*>* player_inventory;
             string inventory_selector_handle;
             string equipment_selector_handle;
+            string equip_ds_handle;
+            string unequip_ds_handle;
+            bool selector_code = 0;
     };
 
 	class pause_menu: public screen{
@@ -83,6 +89,9 @@ namespace dg{
             int option_code = 0;
             int maxoption;
             bool empty = false;
+            void setoptions(list<string> options);
+            string getmodifdshandle();
+            string getcurrentoptionstring();
 			//void print();
 		private:
 			vector<string> option_ie_handles;

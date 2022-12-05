@@ -5,6 +5,7 @@
 #include <ncurses.h>
 #include <iostream>
 #include "mob.h"
+#include <algorithm>
 using namespace dg;
 
 namespace dg{
@@ -99,6 +100,7 @@ namespace dg{
 		add_ie(new uisprite("ps_inventory",SPRITEDB["ps_inventory"],18,31));
 		add_ie(new uiboxVseperator(11,"ps_inventory_seperator",31,30));
         add_ie(new uisprite("ps_dungeon",SPRITEDB["dungeon"],0,0));
+        add_ie(new playlog(61,6,"ps_play_log",0,42));
 		//test player
 		mob* testplayer = new mob("test_player",10,10,23,20);
 		mob* testplayer1 = new mob("test_player", 20, 20, 20,20);
@@ -116,6 +118,12 @@ namespace dg{
         testplayer->equip("rusted_chestplate");
         testplayer1->additem("rusted_chestplate");
         testplayer1->equip("rusted_chestplate");
+        testplayer->additem("mundane_longsword");
+        testplayer->equip("mundane_longsword");
+        testplayer->additem("poison_dagger");
+        testplayer->additem("rusted_chestplate");
+        //testplayer->additem("rusted_chestplate");
+        //testplayer->equip("rusted_chestplate_0");
 		//hp
         int curhp = MOBDB[player_handle]->getcurrenthitpoint();
 		int maxhp = MOBDB[player_handle]->getmaxhitpoint();
@@ -206,6 +214,10 @@ namespace dg{
                 advanceround();
                 return 1;
             }
+            case('i'):{
+                inventory_menu* im = new inventory_menu("ps_iv_menu",player_handle);
+                SCREENSTACK.push_back(im->gethandle());
+            }
             case('r'):{
                 advanceround();
                 //advance round
@@ -245,13 +257,11 @@ namespace dg{
         list<string> usable_items;
         //map<int,string> optioncodetoinventoryhandle;
         int idx = 0;
-        for(pair<string,item*> p: *MOBDB[player_handle]->getinventory()){
+        for(pair<string,item*> p: MOBDB[player_handle]->getusable()){
             item* i = p.second;
-            if(i->usable()){
-                usable_items.push_back(i->getname());
-                optioncodetoinventoryhandle.insert({idx,p.first});
-                idx++;
-            }
+            usable_items.push_back(i->getname());
+            optioncodetoinventoryhandle.insert({idx,p.first});
+            idx++;
         }
         //usable_items.push_back("G");
         dynamic_string_selector* selector = new dynamic_string_selector(selector_handle,"use_menu_placeholder",usable_items,x,y,16,11);
@@ -299,10 +309,125 @@ namespace dg{
             }
         }
     }
+    
+    inventory_menu::~inventory_menu(){
+        delete(VALDB[equip_ds_handle]);
+        delete(VALDB[unequip_ds_handle]);
+        delete(ACTIVESCREENS[inventory_selector_handle]);
+        delete(ACTIVESCREENS[equipment_selector_handle]);
+    }
 
-    /*inventory_menu::inventory_menu(){
+    inventory_menu::inventory_menu(string handle, string player_h):screen(handle){
+        setloc(0,0);
+        player_handle = player_h;
+        player_inventory = MOBDB[player_handle]->getinventory();
+        inventory_selector_handle = "inventory_menu_inventory_selector";
+        equipment_selector_handle = "inventory_menu_equipment_selector";
+        equip_ds_handle = "inventory_menu_equip_ds";
+        unequip_ds_handle = "inventory_menu_unequip_ds";
+        add_ie(new uitext(L"INVENTORY","inventory_menu_title",1,0));
+        add_ie(new uitext(L"EQUIPMENT","equipment_menu_title",39,0));
+        add_ie(new uitext(L"[ENTER] to equip","inventory_menu_instruction",3,29));
+        add_ie(new uitext(L"and unequip", "inventory_menu_instruction_2",39,29));
+        new dynamicstring(equip_ds_handle,"");
+        new dynamicstring(unequip_ds_handle,"");
+        list<string> inventory_items;
+        //map<int,string> optioncodetoinventoryhandle;
+        //int idx = 0;
+        for(pair<string,item*> p: *player_inventory){
+            //item* i = p.second;
+            inventory_items.push_back(p.first);
+        }
 
-    }*/
+        list<string> equipment_items;
+        for(string eq: *MOBDB[player_handle]->getequipments()){
+            equipment_items.push_back(eq);
+        }
+        //usable_items.push_back("G");
+        dynamic_string_selector* selector = new dynamic_string_selector(inventory_selector_handle,equip_ds_handle,inventory_items,x,y,36,29);
+        SCREENSTACK.insert(----SCREENSTACK.end(),inventory_selector_handle);
+
+        dynamic_string_selector* selectorii = new dynamic_string_selector(equipment_selector_handle,unequip_ds_handle,equipment_items,x+38,y,21,29);
+        SCREENSTACK.insert(--SCREENSTACK.end(),equipment_selector_handle);
+
+    }
+    void inventory_menu::updateuielements(){
+        
+        list<string> inventory_items;
+        //map<int,string> optioncodetoinventoryhandle;
+        //int idx = 0;
+        for(pair<string,item*> p: *player_inventory){
+            //item* i = p.second;
+            inventory_items.push_back(p.first);
+        }
+
+        list<string> equipment_items;
+        for(string eq: *MOBDB[player_handle]->getequipments()){
+            equipment_items.push_back(eq);
+        }
+        ((dynamic_string_selector*)ACTIVESCREENS[equipment_selector_handle])->setoptions(equipment_items);
+        ((dynamic_string_selector*)ACTIVESCREENS[inventory_selector_handle])->setoptions(inventory_items);
+    }
+    void inventory_menu::print(){
+        //screen::print();
+        //updateuielements();
+        screen::print();
+    }
+    int inventory_menu::execute(int key){
+        map<int, string> convert = {{0,inventory_selector_handle},{1,equipment_selector_handle}};
+        dynamic_string_selector* selector = (dynamic_string_selector*)ACTIVESCREENS[convert[selector_code]];
+        switch(key){
+			case(KEY_UP):{
+				if(selector->option_code-1<0)return 0;
+				selector->option_code--;
+				selector->updatecursorloc();
+				return 1;
+			}
+			case(KEY_DOWN):{
+				if(selector->option_code+1>=selector->maxoption)return 0;
+				selector->option_code++;
+				selector->updatecursorloc();
+				return 1;
+			}
+            case(KEY_LEFT):{
+                selector_code = 0;
+                return 1;
+            }
+            case(KEY_RIGHT):{
+                selector_code = 1;
+                return 1;
+            }
+            //Enter
+            
+            case(10):{
+                if(!(selector->empty)){    
+                    mob* player = MOBDB[player_handle];
+                    //dynamicstring* ds = (dynamicstring*)VALDB[selector->getmodifdshandle()];
+                    string target_equipment_handle = selector->getcurrentoptionstring();
+                    if(selector_code){
+                        //in equip
+                        player->unequip(target_equipment_handle);
+                    }else{
+                        //in inv
+                        player->equip(target_equipment_handle);
+
+                    }
+                    //delete(this);
+                    //if(){}
+                }
+                updateuielements();
+                //delete(this);
+                return 1;
+            }
+            case(27):{
+                delete(this);
+                return 1;
+            }
+            default:{
+                return 0;
+            }
+        }
+    }
 
 	/*pause_menu::~pause_menu(){
 		SCREENSTACK.remove(handle);
@@ -432,6 +557,49 @@ namespace dg{
 			cursor_masked = cursor->ismasked(x,y);
 		}
 	}
+    void dynamic_string_selector::setoptions(list<string> options){
+        maxoption = options.size();
+        if(options.size()==0){
+            
+			add_ie(new uitext(wstring(L"EMPTY")/*+wstring(max(0,size_y-5) L' ')*/, "empty_label"+handle,1,1));
+			empty = true;
+            return;
+        }
+        //if(option_code>maxoption)option_code = maxoption;
+        //if(option_code<0)option_code = 0;
+        list<string> options_to_erase;
+        for(string option_ie_handle: option_ie_handles){
+            options_to_erase.push_back(option_ie_handle);
+            //delete(iemap[option_ie_handle]);
+            //iemap.erase(option_ie_handle);
+        }
+        for(string option_ie_handle: options_to_erase){
+            delete(iemap[option_ie_handle]);
+            iemap.erase(option_ie_handle);
+            iestack.remove(option_ie_handle);
+        }
+        option_ie_handles.clear();
+		//string existing_string = ((dynamicstring*)(VALDB[modifdshandle]))->getstring();
+        int original_y = 1;
+		for(string option: options){
+			string option_ie_handle = string("temp_string_selector") + to_string(original_y)+handle;
+			add_ie(new uitext(towstring(option),option_ie_handle,3,original_y));
+			option_ie_handles.push_back(option_ie_handle);
+			/*if(original_y<sy-1){
+				iestack.push_back(option_ie_handle);
+			}else{
+				overmax_ie++;
+			}*/
+			original_y ++;
+			iemap[option_ie_handle]->setmask(x+2,y+1,x+sx-1,y+sy);
+			iemap[option_ie_handle]->setcustommask(true);	
+			/*if(option == existing_string){
+				option_code = original_y-2;
+				iemap[option_ie_handle]->addattr(A_BOLD);
+			}*/
+		}
+
+    }
 	dynamic_string_selector::dynamic_string_selector(string handle, string dynamicstringhandle, list<string> options, int xl, int yl, int size_x, int size_y):screen(handle){
 		//center = true;
 		setloc(xl,yl);
@@ -444,7 +612,7 @@ namespace dg{
 		int original_y = 1;
 		//int overmax_ie = 0;
 		if(options.size() == 0){
-			add_ie(new uitext(L"EMPTY", "empty_label"+handle,1,1));
+			add_ie(new uitext(wstring(L"EMPTY")/*=wstring(max(0,size_x-5),L' ')*/, "empty_label"+handle,1,1));
 			empty = true;
             return;
 		}
@@ -487,7 +655,11 @@ namespace dg{
 	/*void dynamic_string_selector::print(){
 
 	}*/
-
+    string dynamic_string_selector::getmodifdshandle(){return modifdshandle;}
+    string dynamic_string_selector::getcurrentoptionstring(){
+        interface_element* current_option = iemap[option_ie_handles.at(option_code)];
+        return tostring(((uitext*)current_option)->getstring());
+    }
 	int dynamic_string_selector::execute(int key){
 		switch(key){
 			case(KEY_UP):{

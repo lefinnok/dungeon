@@ -2,6 +2,7 @@
 #include "uielements.h"
 #include "databases.h"
 #include <vector>
+#include <list>
 #include <iostream>
 //#include <ncurses.h>
 using namespace dg; 
@@ -204,6 +205,26 @@ namespace dg{
             fromy++;
         }
 
+    }
+    playlog::playlog(int sx, int sy, string handle, int xl, int yl):interface_element(handle,xl,yl){
+       //iemask = mask(x,y,);
+       size_x = sx;
+       size_y = sy;
+    }
+    void playlog::print(int xrel, int yrel){
+        int fx = xrel+x;
+        int fy = yrel+y;
+
+        uibox basebox(size_x,size_y,"nope",0,0);
+        basebox.print(fx,fy);
+        printat(L"JOURNAL",fx+1,fy);
+        int limit = size_y-1;
+        int count = 0;
+        for(list<wstring>::reverse_iterator it = SYSTEMLOG.rbegin();it!=SYSTEMLOG.rend();it++){
+            if(count>=limit)break;
+            printat(*it,fx+1,fy-1+(size_y-count));
+            count++;
+        }
     }
 } 
 

@@ -9,6 +9,7 @@
 #include "screens.h"
 #include <ncurses.h>
 #include <algorithm>
+#include <random>
 using namespace std;
 using namespace dg;
 namespace dg{
@@ -178,6 +179,26 @@ namespace dg{
     map<string,item*>* mob::getinventory(){return &inventory;}
     list<string>* mob::getequipments(){return &equipments;}
     void mob::addstatus(status_effect* s){active_statuses.push_back(s);}
+    int mob::getagilitymod(){
+        int a = getmodagility();
+        if(a>20)return 4;
+        return modifier_convert[a];
+    }
+    int mob::getpresencemod(){
+        int a = getmodpresence();
+        if(a>20)return 4;
+        return modifier_convert[a];
+    }
+    int mob::getstrengthmod(){
+        int a = getmodstrength();
+        if(a>20)return 4;
+        return modifier_convert[a];
+    }
+    int mob::gettoughnessmod(){
+        int a = getmodtoughness();
+        if(a>20)return 4;
+        return modifier_convert[a];
+    }
     list<modifier*> mob::gettotalmodifiers(){
         list<modifier*> total_modifiers;
         for(modifier* mod: inherent_modifiers){
@@ -231,11 +252,36 @@ namespace dg{
 
     void mob::equip(string inventory_handle){
         bool found = (std::find(equipments.begin(), equipments.end(), inventory_handle) != equipments.end());
+        item* i = inventory[inventory_handle];
+        string appendage = "";
+        for(modifier* mod: *i->getmodifiers()){
+            if(mod->type=="appendage")appendage=mod->val;
+        }
+        if(appendage==""){
+            outlog(L"equipment missing appendage identifier");
+            return;
+        }
+        //if same appendage
+        list<string> ehtounequip;
+        for(string equipment_handle: equipments){
+            if(inventory[equipment_handle]->getappendage()==appendage){
+                ehtounequip.push_back(equipment_handle);
+                //unequip(equipment_handle);
+            }
+        }
+        for(string eh: ehtounequip){
+            unequip(eh);
+        }
         if(inventory.count(inventory_handle)&&!found){
             equipments.push_back(inventory_handle);
         }
     }
-
+    void mob::unequip(string inventory_handle){
+        bool found = (std::find(equipments.begin(), equipments.end(), inventory_handle) != equipments.end());
+        if(found){
+            equipments.remove(inventory_handle);
+        }
+    }
     void mob::airound(){
         list<status_effect*>* active_statuses = getstatuslist();
         list<status_effect*> ticks;
@@ -245,6 +291,27 @@ namespace dg{
         for(status_effect* s: ticks){
             s->tick();
         }
+    }
+
+    map<string,item*> mob::getusable(){
+        map<string, item*> usable_map;
+        for(pair<string,item*> p: inventory){
+            item* i = p.second;
+            list<string>* tgs = i->gettags();
+            bool isEquipment = (std::find(tgs->begin(), tgs->end(), "Equipment") != tgs->end());
+            if(isEquipment)continue;
+            if(i->usable()){
+                usable_map.insert(p);
+            }
+            
+        }
+        for(string eq: equipments){
+            item* i = inventory[eq];
+            if(i->usable()){
+                usable_map.insert({eq,i});
+            }
+        }
+        return usable_map;
     }
 	//===ITEMS===
     
@@ -319,6 +386,7 @@ namespace dg{
             if(status_type=="heal"){
                 heal* h = new heal("Heal",MOBDB[target_handle],dur,val);
                 MOBDB[target_handle]->addstatus(h);
+                outlog(towstring(actor->gethandle())+wstring(L" healed ")+ towstring(MOBDB[target_handle]->gethandle()) +wstring(L" by ") + to_wstring(val)+wstring(L" points per round for " + to_wstring(dur)+wstring(L" rounds.")));
             }
             return 1;
         }
@@ -326,6 +394,98 @@ namespace dg{
         return 0;
 	}
 
+	int strength_attack::trigger(mob* actor){
+		//all apply statuses should only be used on mobs
+        string ds_handle = "temp_status_apply_target_selection_string";
+        string selector_handle = "temp_status_apply_target_selector";
+		new dynamicstring(ds_handle,"Cancel");
+        int tempexit = 0;
+        list<string> mobsinscene;
+        for(pair<string,mob*> p: MOBDB){
+            mobsinscene.push_back(p.first);
+        }
+        dynamic_string_selector* triggerselect= new dynamic_string_selector(selector_handle,ds_handle,mobsinscene,0,20,16,10);
+        while(!tempexit){
+            if(!ACTIVESCREENS.count(selector_handle))break;
+            triggerselect->print();
+            
+		    int exec_code = 0;
+    		while(!exec_code){
+    			screen* current_control_screen = triggerselect;
+    			int input = 0;	
+    			if(current_control_screen->getcontrollable()){
+    				input = getch();
+    			}
+
+    			exec_code = current_control_screen->execute(input);
+    		}
+        }
+        
+        string target_handle = VALDB[ds_handle]->getstring();
+        mob* target_mob = MOBDB[target_handle];
+        
+        int strength_roll = rand()%20+1 + actor->getstrengthmod();
+        int agility_roll = rand()%20+1 + target_mob->getagilitymod();
+        if(agility_roll>strength_roll){
+            outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" but missed STR") + to_wstring(strength_roll)+wstring(L" vs AGL"+to_wstring(agility_roll)));
+            delete(VALDB[ds_handle]);
+            return 0;
+        }
+
+        int amount = 1;
+        int damage = 1;
+        if(arguments.count("damage_roll")){
+            string amount_buf;
+            string damage_buf;
+            bool amtdmg = 1;
+            for(char c: arguments["damage_roll"]){
+                if(c=='d'){amtdmg=0;continue;}
+                if(amtdmg){
+                    amount_buf.push_back(c);
+                }else{
+                    damage_buf.push_back(c);
+                }
+                
+            }
+            amount = stoi(amount_buf);
+            damage = stoi(damage_buf);
+        }
+
+        int rolled_damage = 0;
+        for(int i=0;i<amount;i++){
+            rolled_damage+=rand()%damage+1;
+        }
+
+        //modifiers
+        for(modifier* mod: actor->gettotalmodifiers()){
+            if(mod->type=="outgoing_damage")rolled_damage+=stoi(mod->val);
+        }
+        for(modifier* mod: target_mob->gettotalmodifiers()){
+            if(mod->type=="incoming_damage")rolled_damage+=stoi(mod->val);
+        }
+        if(rolled_damage>0)target_mob->modifyhitpoint(-rolled_damage);
+        outlog(towstring(actor->gethandle()) + wstring(L" struck ") + towstring(target_mob->gethandle())+ wstring(L" dealing ") + to_wstring(rolled_damage)+wstring(L" points of damage"));
+        /*if(arguments.count("value")){
+        outlog();
+        outlog();
+            val = stoi(arguments["value"]);
+        }
+        int dur = -1;
+        if(arguments.count("duration")){
+            dur = stoi(arguments["duration"]);
+        }
+        string target_handle = VALDB[ds_handle]->getstring();
+        if(arguments.count("status_type")&&MOBDB.count(target_handle)){
+            string status_type = arguments["status_type"];
+            if(status_type=="heal"){
+                heal* h = new heal("Heal",MOBDB[target_handle],dur,val);
+                MOBDB[target_handle]->addstatus(h);
+            }
+            return 1;
+        }*/
+        delete(VALDB[ds_handle]);
+        return 0;
+	}
     //modifier
     modifier::~modifier(){
         if(parentlist){parentlist->remove(this);}
@@ -343,10 +503,17 @@ namespace dg{
     list<modifier*>* item::getmodifiers(){return &modifiers;}
     string item::getname(){return name;}
     string item::getinventoryhandle(){return inventory_handle;}
+    list<string>* item::gettags(){return &tags;}
     
     item* item::copy(){
         //if(!act) item(name,modifiers,tags); 
         return new item(name,act,modifiers,tags);
+    }
+    string item::getappendage(){
+        for(modifier* mod: modifiers){
+            if(mod->type=="appendage")return mod->val;
+        }
+        return "";
     }
     int item::use(){
         if(act)return act->trigger(owner);

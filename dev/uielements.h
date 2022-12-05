@@ -76,20 +76,25 @@ namespace dg{
             
             mob* target_mob;
     };
+    class playlog: public interface_element{
+        public:
+            playlog(int size_x, int size_y, string handle,int xl, int yl);
+            void print(int xl, int yl);
+    };
 	class uiboxVseperator: public interface_element{
 		public:
 			uiboxVseperator(int size_y,string handle, int xl, int yl);
 			void print(int xl, int yl);
-		protected:
-			int size_y;
+		/*protected:
+			int size_y;*/
 	};
 
 	class uiboxHseperator: public interface_element{
 		public:
 			uiboxHseperator(int size_x,string handle, int xl, int yl);
 			void print(int xl, int yl);
-		protected:
-			int size_x;
+		/*protected:
+			int size_x;*/
 	};
 	class uiprogressbar: public interface_element{
 		public:
@@ -98,7 +103,7 @@ namespace dg{
 			void updateval(int);
 			void updatemax(int);
 		protected:
-			int size_y;
+			//int size_y;
 			int value, maximum;
 	};
 

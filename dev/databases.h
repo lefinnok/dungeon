@@ -23,6 +23,7 @@ namespace dg{
 	extern std::list<std::string> SCREENSTACK;
 	//global integers
 	extern std::map<std::string,dynamicvalue*> VALDB;
-	
+    extern std::list<std::wstring> SYSTEMLOG;	
+    void outlog(std::wstring);
 }
 #endif

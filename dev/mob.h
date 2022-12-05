@@ -85,7 +85,11 @@ namespace dg{
 			int getmodstrength();
 			int getmodpresence();
 			int getmodtoughness();
-			
+		    
+            int getagilitymod();
+            int getstrengthmod();
+            int getpresencemod();
+            int gettoughnessmod();
 
 			//set current stats' default is the mob maxstats
 			//Note: These should be set in constructor, this will not be called
@@ -110,6 +114,7 @@ namespace dg{
             list<modifier*> gettotalmodifiers();
             void airound();
             list<string>* getequipments();
+            map<string,item*> getusable();
 
 		protected:
 			std::string handle;
@@ -163,6 +168,11 @@ namespace dg{
 			int trigger(mob* actor);
 		
 	};
+    class strength_attack: public action{
+        public:
+            using action::action;
+            int trigger(mob* actor);
+    };
 
 	class item{
 		public:
@@ -179,6 +189,8 @@ namespace dg{
             string getinventoryhandle();
             void setistemplate(bool);
             list<modifier*>* getmodifiers();
+            list<string>* gettags();
+            string getappendage();
 		protected:
             list<string> tags;
 			string name;
@@ -217,10 +229,10 @@ namespace dg{
 			list<modifier*> modifiers;
 	};*/
 
-	class potion:public consumable{
+	/*class potion:public consumable{
 		//public:
 			
-	};
+	};*/
 	
 }
 #endif

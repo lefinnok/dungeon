@@ -21,4 +21,6 @@ namespace dg{
 	map<string,dynamicvalue*> VALDB;
 	//map<string,equipment*>EQUIPMENT_TEMPLATES;
 	list<string> SCREENSTACK;
+    list<wstring> SYSTEMLOG;
+    void outlog(wstring outstring){SYSTEMLOG.push_back(outstring);}
 }
