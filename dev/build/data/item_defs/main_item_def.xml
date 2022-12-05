@@ -38,6 +38,9 @@
                 <damage_roll>1d8</damage_roll>
             </strength_attack>
         </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
         <tags>
             <weapon></weapon>
             <melee></melee>
@@ -53,6 +56,7 @@
         </action>
         <modifiers>
             <poison_damage>3</poison_damage>
+            <appendage>hand</appendage>
         </modifiers>
         <tags>
             <weapon></weapon>
@@ -67,6 +71,9 @@
                 <damage_roll>1d8</damage_roll>
             </presence_attack>
         </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
         <tags>
             <weapon></weapon>
             <ranged></ranged>
@@ -80,6 +87,7 @@
         </action>
         <modifiers>
             <spell_apply_status>rot,3</spell_apply_status>
+            <appendage>hand</appendage>
         </modifiers>
         <tags>
             <weapon></weapon>
@@ -104,6 +112,7 @@
             <agility>-1</agility>
             <toughness>-1</toughness>
             <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
         </modifiers>
     </Equipment>
 
