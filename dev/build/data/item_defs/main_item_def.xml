@@ -9,7 +9,7 @@
                 <heal Duration="5"></heal>
             </apply_status>
         </action>
-		<dropchance>90</dropchance>
+	<dropchance>90</dropchance>
     </Consumable>
 
     <Consumable Name="Lesser Poison">
@@ -19,7 +19,7 @@
                 <poison_damage Duration="5">3</poison_damage>
             </add_modifier>
         </action>
-		<dropchance>80</dropchance>
+	<dropchance>80</dropchance>
     </Consumable>
 
 
@@ -31,7 +31,7 @@
                 <damage>1</damage>
             </add_modifier>
         </action>
-		<dropchance>70</dropchance>
+	<dropchance>70</dropchance>
     </Consumable>
 
     <Equipment Name="mundane_longsword">
@@ -48,7 +48,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="fighers_binding">
@@ -65,7 +65,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="growing_stick">
@@ -82,7 +82,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 
     <Equipment Name="battle_stick">
@@ -99,7 +99,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
 
@@ -117,7 +117,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>5</dropchance>
+	<dropchance>5</dropchance>
     </Equipment>
 	
     <Equipment Name="axe">
@@ -134,7 +134,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="double_axe">
@@ -151,7 +151,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>15</dropchance>
+	<dropchance>15</dropchance>
     </Equipment>
 	
     <Equipment Name="cursed_axe">
@@ -168,7 +168,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>15</dropchance>
+	<dropchance>15</dropchance>
     </Equipment>
 	
     <Equipment Name="whirlwind">
@@ -185,7 +185,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>15</dropchance>
+	<dropchance>15</dropchance>
     </Equipment>
 	
     <Equipment Name="spear">
@@ -202,7 +202,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="poison_dagger">
@@ -220,7 +220,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 
     <Equipment Name="bubble_bow">
@@ -237,7 +237,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>25</dropchance>
+	<dropchance>25</dropchance>
     </Equipment>
 	
     <Equipment Name="hunters_bow">
@@ -254,7 +254,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="master_bow">
@@ -271,7 +271,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="long_bow">
@@ -288,7 +288,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="harp_crossbow">
@@ -305,7 +305,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
     <Equipment Name="cursed_crossbow">
@@ -322,7 +322,7 @@
             <weapon></weapon>
             <ranged></ranged>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 
     <Equipment Name="rotten_staff">
@@ -354,7 +354,7 @@
             <weapon></weapon>
             <spell_focus></spell_focus>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
 
@@ -371,7 +371,7 @@
             <weapon></weapon>
             <spell_focus></spell_focus>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="hellfire_staff">
@@ -387,7 +387,7 @@
             <weapon></weapon>
             <spell_focus></spell_focus>
         </tags>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 
     <Spell Name="fire_bolt">
@@ -409,7 +409,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>30</dropchance>
+	<dropchance>30</dropchance>
     </Equipment>
 	
     <Equipment Name="rusted_shoe">
@@ -419,7 +419,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>30</dropchance>
+	<dropchance>30</dropchance>
     </Equipment>	
 
     <Equipment Name="rusted_chestplate">
@@ -429,7 +429,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>30</dropchance>
+	<dropchance>30</dropchance>
     </Equipment>
     
     <Equipment Name="makeshift_dagger">
@@ -446,7 +446,7 @@
             <weapon></weapon>
             <melee></melee>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
     
     <Spell Name="rotting_mist">
@@ -495,7 +495,7 @@
             <incoming_damage>2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 
     <Equipment Name="iron_shoe">
@@ -505,7 +505,7 @@
             <incoming_damage>2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="iron_chestplate">
@@ -515,7 +515,7 @@
             <incoming_damage>2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>	
 
     <Equipment Name="cloak">
@@ -525,7 +525,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
     
     <Equipment Name="ember_cloak">
@@ -535,7 +535,7 @@
             <incoming_damage>-2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="evocation_cloak">
@@ -545,7 +545,7 @@
             <incoming_damage>-2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 
     <Equipment Name="verdant_cloak">
@@ -555,7 +555,7 @@
             <incoming_damage>-2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment> 
 
     <Equipment Name="grim_armor">
@@ -565,7 +565,7 @@
             <incoming_damage>-1</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 
     <Equipment Name="wither_armor">
@@ -575,7 +575,7 @@
             <incoming_damage>-1</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
     <Equipment Name="guard_armor">
@@ -585,7 +585,7 @@
             <incoming_damage>-2</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
     <Equipment Name="renegade_armor">
@@ -595,7 +595,7 @@
             <incoming_damage>-1</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 	
     <Equipment Name="ocelot_armor">
@@ -605,7 +605,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>10</dropchance>
+	<dropchance>10</dropchance>
     </Equipment>
 
 	
@@ -616,7 +616,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>5</dropchance>
+	<dropchance>5</dropchance>
     </Equipment>
 	
     <Equipment Name="reinforced_mail">
@@ -626,7 +626,7 @@
             <incoming_damage>-3</incoming_damage>
             <appendage>torse</appendage>
         </modifiers>
-		<dropchance>5</dropchance>
+	<dropchance>5</dropchance>
     </Equipment>
 
 </ItemDef>
