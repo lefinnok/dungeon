@@ -385,7 +385,7 @@ namespace dg{
     item* consumable::copy(){
         //if(!act)return new consumable(name,modifiers,tags);
         return new consumable(name,act,modifiers,tags);
-    };
+    }
 
     int consumable::use(){
         int used = item::use();
