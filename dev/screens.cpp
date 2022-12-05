@@ -6,6 +6,9 @@
 #include <iostream>
 #include "mob.h"
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include "saveload.h"
 using namespace dg;
 
 namespace dg{
@@ -28,7 +31,48 @@ namespace dg{
                 return 1;
 			}
 			case('c'):{
-				return 1;
+                
+                ifstream myfile;
+                
+                string path = string(curDir,filelen);
+                string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/""dungeon_core.save";
+                myfile.open(ppath);
+                if(!myfile)return 1;
+                string name;
+                int agl;
+                int prc;
+                int str;
+                int tou;
+                myfile >> name;
+                myfile >> agl;
+                myfile >> prc;
+                myfile >> str;
+                myfile >> tou;
+                mob* newplayer = new mob(name,agl,prc,str,tou);
+                PLAYER=NULL;
+                newplayer->setplayer();
+                play_screen* ps = new play_screen("play_screen");
+                SCREENSTACK.push_back(ps->gethandle());
+                string inventoryitems;
+                while(getline(myfile,inventoryitems)){
+                    if(inventoryitems=="ENDOFINVENTORY")break;
+                    newplayer->additem(inventoryitems);
+                }
+                while(getline(myfile,inventoryitems)){
+                    newplayer->equip(inventoryitems);
+                }
+                //delete(ACTIVESCREENS["title_screen"]);
+                delete(this);
+                return 1;
+                /*for(pair<string,item*>p:*PLAYER->getinventory()){
+                    myfile << p.second->getname()<< endl;
+                }
+                myfile << "ENDOFINVENTORY"<< endl;
+                for(string e: *PLAYER->getequipments()){
+                    myfile << e <<endl;
+                }
+                myfile.close();
+				return 1;*/
 			}
 			case('n'):{
 				character_creation* cc = new character_creation("character_create");
@@ -530,6 +574,26 @@ namespace dg{
 			case('q'):{
 				new titlescreen("title_screen");
 				SCREENSTACK.push_back("title_screen");
+
+                ofstream myfile;
+                
+                string path = string(curDir,filelen);
+                string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/""dungeon_core.save";
+                myfile.open (ppath);
+                myfile << PLAYER->gethandle()<<endl;
+                myfile << PLAYER->mobagility()<< endl;
+                myfile << PLAYER->mobpresence()<< endl;
+                myfile << PLAYER->mobstrength()<< endl;
+                myfile << PLAYER->mobtoughness()<< endl;
+                for(pair<string,item*>p:*PLAYER->getinventory()){
+                    myfile << p.second->getname()<< endl;
+                }
+                myfile << "ENDOFINVENTORY"<< endl;
+                for(string e: *PLAYER->getequipments()){
+                    myfile << e <<endl;
+                }
+                myfile.close();
+
 				delete(ACTIVESCREENS["play_screen"]);
 				delete(this);
 				return 1;
