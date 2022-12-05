@@ -338,7 +338,7 @@
             <weapon></weapon>
             <spell_focus></spell_focus>
         </tags>
-		<dropchance>20</dropchance>
+	<dropchance>20</dropchance>
     </Equipment>
 	
     <Equipment Name="rat_staff">
