@@ -2,13 +2,18 @@
 #define _DGUIELEMENTS_H_           
 #include <string>
 #include <any>
-using namespace dg;             
+#include "io.h"
+#include "mob.h"
+using namespace dg;
+using namespace std;
 namespace dg{                   
 	class uitext:public interface_element{   
         	public:                 
             		uitext(wstring text, string handle, int xl,int yl);
 			void print(int xl, int yl);
 			wstring getstring();
+			void setstring(wstring);
+			void updatesizex();
 		private:
 			wstring text;
    	};
@@ -59,6 +64,47 @@ namespace dg{
 	class uibox:public uibackground{
 		public:
 			using uibackground::uibackground;
+			void print(int xl, int yl);
+	};
+    class statblock:public interface_element{
+        public:
+            //~statblock();
+            statblock(mob* target_mob, string handle, int xl, int yl);
+            void print(int xl, int yl);
+            void setmob(mob* mb);
+        private:
+            
+            mob* target_mob;
+    };
+	class uiboxVseperator: public interface_element{
+		public:
+			uiboxVseperator(int size_y,string handle, int xl, int yl);
+			void print(int xl, int yl);
+		protected:
+			int size_y;
+	};
+
+	class uiboxHseperator: public interface_element{
+		public:
+			uiboxHseperator(int size_x,string handle, int xl, int yl);
+			void print(int xl, int yl);
+		protected:
+			int size_x;
+	};
+	class uiprogressbar: public interface_element{
+		public:
+			uiprogressbar(int size_x, int val, int max, string handle, int xl, int yl);
+			void print(int xl, int yl);
+			void updateval(int);
+			void updatemax(int);
+		protected:
+			int size_y;
+			int value, maximum;
+	};
+
+	class uiprogressbar2: public uiprogressbar{
+		public:
+            using uiprogressbar::uiprogressbar;
 			void print(int xl, int yl);
 	};
 }                               

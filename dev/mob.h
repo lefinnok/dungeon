@@ -4,11 +4,21 @@
 #include <vector>
 #include <string>
 #include <list>
+using namespace std;
+//#include "items.h"
+//using namespace dg;
 namespace dg{
+	//class equipment;
+	//class modifier;
+	//class status_effect;
 	//references and inspiration from mork borg
 	// map for converting attribute to modifer
 	extern std::map<int,int> modifier_convert;
+
+
+
 	// mobs name and description
+	//class thing{};
 	class mob;
 	class attributes{
 		public:
@@ -25,58 +35,29 @@ namespace dg{
 			int getToughnessMod();	
 	};
 
-	class modifier {
-		public:
-			int type;
-			int val;
-
-	};
-
-	//can implement later if have time
-	class effect{
-		
-	};
-	class equipment{
-		public:
-			//constructor
-			equipment(std::string, int, int, int, int, int, int);
-			void cout_eqstats();
-			std::string equipname();
-			int equipbase_hp();
-			int equipbase_ac();
-			int equipagility();
-			int equipstrength();
-			int equippresence();
-			int equiptoughness();
-
-			//called when the equipment is used against a target
-			virtual void use(mob* target);
-		protected:
-			std::string eqname;
-			int eqbase_hp;
-			int eqbase_ac;
-			attributes eqattr;
-	};
-	class melee_weapon:equipment{
-		public:
-			//constructor
-			melee_weapon(std::string, int, int, int, int, int);
-			void use(mob* target, attributes* user_attributes);
-	};
-	//implement later
+	
+	/*class equipment;
 	class appendage{
 		public:
 			//constructor
 			appendage();
 			equipment eq;
 					
-	};
+	};*/
+	
 
+	class status_effect;
+	class equipment;
+	class modifier;
+	class item;
 	class mob{
 		public:
 			//constructor
-			mob(std::string, int, int, int, int, int, int);
-			std::vector<equipment> eqlist;
+			mob(std::string, int, int, int, int);
+			~mob();
+
+			int getcurrenthitpoint();
+			//std::vector<equipment> eqlist;
 			//deconstructor
 			//~mob();
 			
@@ -95,32 +76,151 @@ namespace dg{
 			int mobpresence();
 			int mobtoughness();
 			
-			//get the maxstats of mob
+			//get the modified stats of mob
 			//input is the corresponding stats in the list of equipment
 			//output is the corresponding equipment's base stats + mob stats
-			int getmaxhealth();
-			int getmaxac();
-			int getmaxagility();
-			int getmaxstrength();
-			int getmaxpresence();
-			int getmaxtoughness();
+			int getmaxhitpoint();
+			int getmodac();
+			int getmodagility();
+			int getmodstrength();
+			int getmodpresence();
+			int getmodtoughness();
 			
 
 			//set current stats' default is the mob maxstats
+			//Note: These should be set in constructor, this will not be called
+			/*
 			int result_health = getmaxhealth();
 			int result_ac = getmaxac();
-			int result_agilty = getmaxagility();
+			int ult_agilty = getmaxagility();
 			int result_strength = getmaxstrength();
 			int result_presence = getmaxpresence();
 			int result_toughness = getmaxtoughness();
-			
+			*/
+			list<status_effect*>* getstatuslist();
+			void modifyhitpoint(int);
+			string gethandle();
+			void dead();
+            void additem(string itemname);
+            void addstatus(status_effect*);
+            map<string,item*>* getinventory();
+            void equip(string inventory_handle);
+            void unequip(string inventory_handle);
+            void addimodifier(modifier* imodif);
+            list<modifier*> gettotalmodifiers();
+            void airound();
+            list<string>* getequipments();
+
 		protected:
-			std::string name;
-			int base_hp;
-			int base_ac;
+			std::string handle;
+			int hitpoint;
+			//int ac;
 			attributes attr;
 			std::string armor;
 			std::string weapon;
+			//std::list<equipment> eqlist;
+            list<string> equipments;
+			std::map<string,item*> inventory;
+			std::list<status_effect*> active_statuses;
+			list<modifier*> inherent_modifiers;
+
 	};
+	
+
+	class status_effect{
+		public:
+			status_effect(string name, mob* host,int duration, int val);
+			~status_effect();
+			virtual void tick();
+            string getname();
+            int getduration();
+            int getvalue();
+		protected:
+            string name;
+			mob* host;
+			int duration;
+			int value;
+	};
+
+	class heal:public status_effect{
+		public:
+            using status_effect::status_effect;
+			void tick();
+	};
+
+	class action{
+		public:
+			action(map<string, string> arguments);
+			virtual int trigger(mob* actor);
+            //virtual action* copy;
+		protected:
+			map<string,string> arguments;
+
+	};
+	class apply_status: public action{
+		public:
+            using action::action;
+			int trigger(mob* actor);
+		
+	};
+
+	class item{
+		public:
+            ~item();
+            //item(string name, list<modifier*> modifiers,list<string> tags);
+			item(string name, action* act, list<modifier*> modifiers, list<string> tags);
+            void setinventory(map<string,item*>* pi);
+            void setowner(mob* owner);
+            void setinventoryhandle(string handle);
+            virtual item* copy();
+            virtual int use();
+            bool usable();
+            string getname();
+            string getinventoryhandle();
+            void setistemplate(bool);
+            list<modifier*>* getmodifiers();
+		protected:
+            list<string> tags;
+			string name;
+			action* act=NULL;
+            list<modifier*> modifiers;
+            mob* owner = NULL;
+            map<string,item*>* parentinventory = NULL;
+            string inventory_handle;
+            bool istemplate = false;
+	};
+
+	class modifier {
+		public:
+            ~modifier();
+			modifier(string type, string val);
+			string type;
+			string val;
+            list<modifier*>* parentlist = NULL;
+
+	};
+
+	class consumable:public item{
+        public:
+            using item::item;
+            virtual item* copy();
+            int use();
+		
+	};
+
+	/*class equipment:public item{
+		public:
+			equipment(string name, list<modifier> modifiers);
+			void use();
+		protected:
+			string name;
+			list<modifier*> modifiers;
+	};*/
+
+	class potion:public consumable{
+		//public:
+			
+	};
+	
 }
 #endif

@@ -14,6 +14,7 @@
 #endif
 #include "databases.h"
 #include "saveload.h"
+#include "mob.h"
 #include <map>
 #include <vector>
 #include "io.h"
@@ -224,6 +225,8 @@ namespace dg{
 	}
 	int interface_element::getx(){return x;}
 	int interface_element::gety(){return y;}
+	int interface_element::getsizex(){return size_x;}
+	int interface_element::getsizey(){return size_y;}
 	/*int interface_element::getvariant(){
 		return ievariant;
 	}*/
@@ -298,6 +301,7 @@ namespace dg{
 			}*/
 
 		}
+		SCREENSTACK.remove(handle);
 		cout<<"Screen Deactivated <"<<handle<<'>'<<endl;
 	}
 	void screen::destruct(){
@@ -362,23 +366,37 @@ namespace dg{
 	void screen::setcontrollable(bool con){
 		controllable = con;
 	}
-	void screen::setcenter(bool cen){
-		center = cen;
+	void screen::setcenter(bool cenx, bool ceny){
+		center_x = cenx;
+		center_y = ceny;
 	}
-	bool screen::iscenter(){
-		return center;
+	bool screen::iscenterx(){return center_x;}
+	bool screen::iscentery(){
+		return center_y;
 	}
 	map<string,interface_element*> screen::getiemap(){
 		return iemap;
 	}
+	int screen::getx(){return x;}
+	int screen::gety(){return y;}
+	int screen::getsizex(){return size_x;}
+	int screen::getsizey(){return size_y;}
 	//METHODS
     //called when screensize updates
     void update_screen_size(){
         getmaxyx(stdscr, SCREENY, SCREENX);
+	
 	for(pair<string, screen*> screenp: ACTIVESCREENS){
-		for(pair<string, interface_element*> iep: screenp.second->getiemap()){
+		screen * scr = screenp.second;
+		for(pair<string, interface_element*> iep: scr->getiemap()){
 			if(!(iep.second->iscustommask()))iep.second->setmask(0,0,SCREENX,SCREENY);
+		}/*
+		if(scr->iscentery()){
+			scr->setloc(scr->getx(),(SCREENY-(scr->getsizey()))>>1);
 		}
+		if(scr->iscenterx()){
+			scr->setloc((SCREENX-(scr->getsizex()))>>1,scr->gety());
+		}*/
 
 	}
         //outbuf = (char*)malloc((SCREENX*SCREENY+1)*sizeof(char));
@@ -474,7 +492,7 @@ namespace dg{
 			scr->print();
 		}
 		//if debug mode, draw debug overlay
-		ACTIVESCREENS["DEBUGOVERLAY"] ->print();
+		//ACTIVESCREENS["DEBUGOVERLAY"] ->print();
 		//wait for valid input and execute it
 		int exec_code = 0;
 		while(!exec_code){
@@ -518,6 +536,31 @@ namespace dg{
     void debugoverlay::print(){
 	    screen::print();
 	    printat(to_wstring(SCREENX),0,0);
+	    wstring mobdbs = L"MODDB: ";
+	    for(pair<string,mob*> p: MOBDB){
+		    mobdbs += wstring(L" ") + towstring(p.first);
+	    }
+	    printat(mobdbs,0,1);
+	    wstring actvs= L"ACTIVES: ";
+	    for(pair<string,screen*> p: ACTIVESCREENS){
+		    actvs += wstring(L" ") + towstring(p.first);
+
+	    }
+	    printat(actvs,0,2);
+        if(MOBDB.count("test_player")){
+	        wstring iv= L"PLAYER_INVENTORY: ";
+	        for(pair<string,item*> p: *MOBDB["test_player"]->getinventory()){
+		        iv += wstring(L" ") + towstring(p.first) + wstring(L"|") + towstring(p.second->getname());
+
+	        }
+            printat(iv,0,3);
+        }
+	    wstring itms= L"LOADEDITEMS: ";
+	    for(pair<string,item*> p: ITEMDB){
+		    itms += wstring(L" ") + towstring(p.first);
+
+	    }
+	    printat(itms,0,4);
 	    /*
 	    if(ACTIVESCREENS.count("title_screen")){
 		   //https://stackoverflow.com/questions/2573834/c-convert-string-or-char-to-wstring-or-wchar-t

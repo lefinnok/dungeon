@@ -9,14 +9,16 @@ namespace dg{
 	class screen;
 	class dynamicvalue;
 	class mob;
+    class item;
 	int EXIT;
 	bool DEBUG = true;
 	int SCREENX;
 	int SCREENY;
-	mob* player;
+	map<string,mob*> MOBDB;
+    map<string,item*> ITEMDB;
 	map<string,sprite*> SPRITEDB;
 	map<string,screen*> ACTIVESCREENS;
 	map<string,dynamicvalue*> VALDB;
-	map<string,equipment*>EQUIPMENT_TEMPLATES;
+	//map<string,equipment*>EQUIPMENT_TEMPLATES;
 	list<string> SCREENSTACK;
 }

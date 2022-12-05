@@ -4,6 +4,7 @@
 #include "uielements.h"
 #include <ncurses.h>
 #include <iostream>
+#include "mob.h"
 using namespace dg;
 
 namespace dg{
@@ -43,6 +44,8 @@ namespace dg{
 	character_creation::character_creation(string handle):screen(handle){
 		setloc(0,0);
 		setcontrollable(true);
+		//size_x = 40;
+		//center_x = true;
 		//add_ie(new uibackground(20,20,"cc_background",0,0));
 		opaque=true;
 		add_ie(new uisprite("scroll", SPRITEDB["scroll_bigbg"],0,3));
@@ -84,6 +87,264 @@ namespace dg{
 			}
 		}
 	}
+	
+    play_screen::~play_screen(){
+        //delete(iemap["ps_show_status_text"]);
+        delete(VALDB[status_string_handle]);
+    }
+	play_screen::play_screen(string handle):screen(handle){
+		add_ie(new uibox(61, 11, "bottom_play_box",0,30));
+		add_ie(new uisprite("ps_use",SPRITEDB["ps_use"],1,31));
+		add_ie(new uiboxVseperator(11,"ps_use_seperator",16,30));
+		add_ie(new uisprite("ps_inventory",SPRITEDB["ps_inventory"],18,31));
+		add_ie(new uiboxVseperator(11,"ps_inventory_seperator",31,30));
+        add_ie(new uisprite("ps_dungeon",SPRITEDB["dungeon"],0,0));
+		//test player
+		mob* testplayer = new mob("test_player",10,10,23,20);
+		mob* testplayer1 = new mob("test_player", 20, 20, 20,20);
+        enemies.push_back(testplayer1);
+        
+        add_ie(new statblock(*enemies.begin(),"ps_enemy_statblock_1",0,8));
+	    
+		player_handle = testplayer->gethandle();
+
+        MOBDB[player_handle]->additem("Health Potion");
+
+        MOBDB[player_handle]->additem("Health Potion");
+
+        testplayer->additem("rusted_chestplate");
+        testplayer->equip("rusted_chestplate");
+        testplayer1->additem("rusted_chestplate");
+        testplayer1->equip("rusted_chestplate");
+		//hp
+        int curhp = MOBDB[player_handle]->getcurrenthitpoint();
+		int maxhp = MOBDB[player_handle]->getmaxhitpoint();
+        add_ie(new uitext(L"HEALTH","ps_player_health_label",32,31));
+		add_ie(new uitext(to_wstring(curhp),"ps_player_cur_health",39,31));
+		add_ie(new uitext(wstring(L"/")+to_wstring(maxhp),"ps_player_max_health",iemap["ps_player_cur_health"]->getsizex()+39,31));
+		add_ie(new uiprogressbar(28,curhp,maxhp,"ps_player_hp_bar",32,32));
+
+        //statuses
+        int statusy = 33;
+        add_ie(new uiboxHseperator(30,"ps_status_seperator_1",31,statusy));
+        add_ie(new uiboxHseperator(30,"ps_status_seperator_2",31,statusy+2));
+        add_ie(new uitext(L"STATUS","ps_status_label",32,statusy));
+        status_string_handle = "ps_show_status_string";
+        new dynamicstring(status_string_handle,"");
+        add_ie(new dynamictext(status_string_handle,"ps_show_status_text",32,statusy+1));
+        
+        //Player Stats
+        add_ie(new uitext(L"","ps_stats_string",32,statusy+3));
+        add_ie(new uitext(L"AGL","ps_agl_label",32,statusy+4));
+        add_ie(new uiprogressbar2(20,0,20,"ps_player_agl_bar",39,statusy+4));
+        add_ie(new uitext(L"PRS","ps_prs_label",32,statusy+5)); 
+        add_ie(new uiprogressbar2(20,0,20,"ps_player_prs_bar",39,statusy+5));
+        add_ie(new uitext(L"STR","ps_str_label",32,statusy+6)); 
+        add_ie(new uiprogressbar2(20,0,20,"ps_player_str_bar",39,statusy+6));
+        add_ie(new uitext(L"TGH","ps_tgh_label",32,statusy+7)); 
+        add_ie(new uiprogressbar2(20,0,20,"ps_player_tgh_bar",39,statusy+7));
+	}
+
+
+	void play_screen::updateuielements(){
+        mob* player = MOBDB[player_handle];
+        if(!player)return;
+		int curhp = MOBDB[player_handle]->getcurrenthitpoint();
+		int maxhp = MOBDB[player_handle]->getmaxhitpoint();
+        int agl = player->getmodagility();
+        int prc = player->getmodpresence();
+        int str = player->getmodstrength();
+        int tgh = player->getmodtoughness();
+		((uitext*)iemap["ps_player_cur_health"])->setstring(to_wstring(curhp));
+		((uitext*)iemap["ps_player_max_health"])->setstring(wstring(L"/")+to_wstring(maxhp));
+		iemap["ps_player_max_health"]->setloc(iemap["ps_player_cur_health"]->getsizex()+39,31);
+        ((uiprogressbar*)iemap["ps_player_hp_bar"])->updatemax(maxhp);
+        ((uiprogressbar*)iemap["ps_player_hp_bar"])->updateval(curhp);
+        ((uiprogressbar*)iemap["ps_player_agl_bar"])->updateval(agl);
+        ((uiprogressbar*)iemap["ps_player_prs_bar"])->updateval(prc);
+        ((uiprogressbar*)iemap["ps_player_str_bar"])->updateval(str);
+        ((uiprogressbar*)iemap["ps_player_tgh_bar"])->updateval(tgh);
+        string status_text = "";
+        
+        for(status_effect* s: *(player->getstatuslist())){
+           status_text += s->getname() + string("|") + to_string(s->getvalue()) + string("|") + to_string(s->getduration()) + string(" "); 
+        }
+        VALDB[status_string_handle]->set(status_text);
+        wstring statstring = wstring(L"|AGL|")+to_wstring(player->getmodagility())+wstring(L"|PRS|")+to_wstring(player->getmodpresence())+wstring(L"|STR|")+to_wstring(player->getmodstrength())+wstring(L"|TGH|")+to_wstring(player->getmodtoughness());
+        ((uitext*)iemap["ps_stats_string"])->setstring(statstring);
+		//add_ie(new uitext(to_wstring(MOBDB[player_handle]->getcurrenthitpoint()),"ps_player_cur_health"),32,31);
+		//add_ue(new uitext(wstring(L"/")+to_wstring(MOBDB[player_handle]->getmaxhitpoint()),"ps_player_max_health",iemap["ps_player_cur_health"]->getsizex()+32+1,31));
+
+	}
+    void play_screen::advanceround(){
+        //apply status effects
+        mob* player = MOBDB[player_handle];
+        if(!player)return;
+        list<status_effect*>* active_statuses = player->getstatuslist();
+        list<status_effect*> ticks;
+        for(status_effect* s: *active_statuses){
+            ticks.push_back(s);
+        }
+        for(status_effect* s: ticks){
+            s->tick();
+        }
+        //enemy round 
+        for(mob* enemy: enemies){
+            enemy->airound();
+        }
+    }
+	int play_screen::execute(int key){
+		//updateuielements();
+		switch(key){
+            case('u'):{
+                /*vector<item*> usable_items;
+                for(item* i: *MOBDB[player_handle]->getinventory()){
+                    if(i->usable())usable_items.push_back(i);
+                }*/
+                use_menu* um = new use_menu("ps_use_menu",player_handle);
+                SCREENSTACK.push_back(um->gethandle());
+                advanceround();
+                return 1;
+            }
+            case('r'):{
+                advanceround();
+                //advance round
+                return 1;
+            }
+			case('h'):{
+				MOBDB[player_handle]->modifyhitpoint(-1);
+                (*enemies.begin())->modifyhitpoint(-1);
+				return 1;
+			}
+			//escape
+			case(27):{
+				screen* ps = new pause_menu("pause_menu");
+				SCREENSTACK.push_back(ps->gethandle());
+				return 1;
+			}
+			default:{
+				return 0;
+			}
+		}
+		return 0;
+	}
+	void play_screen::print(){
+		updateuielements();
+		screen::print();
+	}
+    use_menu::~use_menu(){
+        delete(VALDB["use_menu_placeholder"]);
+        delete(ACTIVESCREENS[selector_handle]);
+    }
+    use_menu::use_menu(string handle, string player_h):screen(handle){
+        setloc(0,30);
+        player_handle = player_h;
+        selector_handle = "use_menu_selector";
+        add_ie(new uitext(L"USE","use_menu_title",1,0));
+        new dynamicstring("use_menu_placeholder","");
+        list<string> usable_items;
+        //map<int,string> optioncodetoinventoryhandle;
+        int idx = 0;
+        for(pair<string,item*> p: *MOBDB[player_handle]->getinventory()){
+            item* i = p.second;
+            if(i->usable()){
+                usable_items.push_back(i->getname());
+                optioncodetoinventoryhandle.insert({idx,p.first});
+                idx++;
+            }
+        }
+        //usable_items.push_back("G");
+        dynamic_string_selector* selector = new dynamic_string_selector(selector_handle,"use_menu_placeholder",usable_items,x,y,16,11);
+        SCREENSTACK.insert(----SCREENSTACK.end(),selector_handle);
+
+        
+    }
+    
+
+    int use_menu::execute(int key){
+        
+        dynamic_string_selector* selector = (dynamic_string_selector*)ACTIVESCREENS[selector_handle];
+        switch(key){
+			case(KEY_UP):{
+				if(selector->option_code-1<0)return 0;
+				selector->option_code--;
+				selector->updatecursorloc();
+				return 1;
+			}
+			case(KEY_DOWN):{
+				if(selector->option_code+1>=selector->maxoption)return 0;
+				selector->option_code++;
+				selector->updatecursorloc();
+				return 1;
+			}
+            //Enter
+            case(10):{
+                if(!(selector->empty)){
+                    string itemuse_handle = optioncodetoinventoryhandle[selector->option_code];
+                    mob* player = MOBDB[player_handle];
+                    map<string,item*>* inventory = player->getinventory();
+                    item* target_item = inventory->find(itemuse_handle)->second;
+                    target_item->use();
+                    //(*(MOBDB[player_handle]->getinventory()))[itemuse_handle]->use();
+                }
+                delete(this);
+                return 1;
+            }
+            case(27):{
+                delete(this);
+                return 1;
+            }
+            default:{
+                return 0;
+            }
+        }
+    }
+
+    /*inventory_menu::inventory_menu(){
+
+    }*/
+
+	/*pause_menu::~pause_menu(){
+		SCREENSTACK.remove(handle);
+		//delete(VALDB[localdshandle]);
+		//dynamicstring* localds = (dynamicstring*)VALDB[localdshandle];
+		//delete(localds);
+	}*/
+	
+	pause_menu::pause_menu(string handle):screen(handle){
+		setloc(20,10);
+		add_ie(new uibox(22, 6, "pause_menu_box",0,0));
+		add_ie(new uitext(L"PAUSE","pause_menu_title",1,0));
+		add_ie(new uitext(L"[S]ave Game", "pause_menu_save_label",1,1));
+		add_ie(new uitext(L"[Q]uit to Main Menu", "pause_menu_quit_label",1,2));
+
+	}
+
+
+	int pause_menu::execute(int key){
+		switch(key){
+			case('s'):{
+				return 1;
+			}
+			case('q'):{
+				new titlescreen("title_screen");
+				SCREENSTACK.push_back("title_screen");
+				delete(ACTIVESCREENS["play_screen"]);
+				delete(this);
+				return 1;
+			}
+			//escape
+			case(27):{
+				delete(this);
+				return 1;
+			}
+			default:{
+				return 0;
+			}
+		}
+		return 0;
+	}
+
 
 	dynamic_string_mod::dynamic_string_mod(string handle, string dynamicstringhandle, int xl, int yl, int size_x, int size_y):screen(handle){
 		//center = true;
@@ -184,9 +445,10 @@ namespace dg{
 		//int overmax_ie = 0;
 		if(options.size() == 0){
 			add_ie(new uitext(L"EMPTY", "empty_label"+handle,1,1));
-			return;
+			empty = true;
+            return;
 		}
-
+        option_code = 0;
 		for(string option: options){
 			string option_ie_handle = string("temp_string_selector") + to_string(original_y)+handle;
 			add_ie(new uitext(towstring(option),option_ie_handle,3,original_y));
@@ -213,7 +475,7 @@ namespace dg{
 		add_ie(new uitext(L"▶",cursor_ie_handle,0,0));
 		iemap[cursor_ie_handle]->setmask(x+2,y+1,x+sx-1,y+sy);
 		iemap[cursor_ie_handle]->setcustommask(true);	
-		updatecursorloc();
+	    updatecursorloc();
 
 		/*if(overmax_ie){
 			iestack.push_back(down_ie_handle);

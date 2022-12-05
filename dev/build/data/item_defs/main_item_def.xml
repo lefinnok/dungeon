@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<ItemDef FormatVersion="1">
+
+    <Consumable Name="Health Potion">
+        <action>
+            <apply_status>
+                <target>mob</target>
+                <heal Duration="5">2</heal>
+            </apply_status>
+        </action>
+    </Consumable>
+
+    <Consumable Name="Lesser Poison">
+        <action>
+            <add_modifier>
+                <target>tag:weapon</target>
+                <poison_damage Duration="5">3</poison_damage>
+            </add_modifier>
+        </action>
+    </Consumable>
+
+
+
+    <Consumable Name="Sharpening Stone">
+        <action>
+            <add_modifier>
+                <target>tag:weapon,melee</target>
+                <damage>1</damage>
+            </add_modifier>
+        </action>
+    </Consumable>
+
+    <Equipment Name="mundane_longsword">
+        <action>
+            <strength_attack>
+                <target>mob</target>
+                <damage_roll>1d8</damage_roll>
+            </strength_attack>
+        </action>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+    </Equipment>
+
+    <Equipment Name="poison_dagger">
+        <action>
+            <agility_attack>
+                <target>mob</target>
+                <damage_roll>1d2</damage_roll>
+            </agility_attack>
+        </action>
+        <modifiers>
+            <poison_damage>3</poison_damage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+    </Equipment>
+
+    <Equipment Name="hunters_bow">
+        <action>
+            <presence_attack>
+                <target>mob</target>
+                <damage_roll>1d8</damage_roll>
+            </presence_attack>
+        </action>
+        <tags>
+            <weapon></weapon>
+            <ranged></ranged>
+        </tags>
+    </Equipment>
+
+    <Equipment Name="rotten_staff">
+        <action>
+            <presence_spell>
+            </presence_spell>
+        </action>
+        <modifiers>
+            <spell_apply_status>rot,3</spell_apply_status>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <spell_focus></spell_focus>
+        </tags>
+    </Equipment>
+
+    <Spell Name="fire_bolt">
+        <action>
+            <spell_cast>
+                <target>mob</target>
+                <damage_roll>1d3</damage_roll>
+            </spell_cast>
+        </action>
+        <modifiers>
+            <spell_apply_status>burning,2</spell_apply_status>
+        </modifiers>
+    </Spell>
+
+    <Equipment Name="rusted_chestplate">
+        <modifiers>
+            <agility>-1</agility>
+            <toughness>-1</toughness>
+            <incoming_damage>-3</incoming_damage>
+        </modifiers>
+    </Equipment>
+
+</ItemDef>

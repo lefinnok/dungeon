@@ -14,6 +14,7 @@
 #include "event.h"
 #include <filesystem>
 #include "io.h"
+#include "mob.h"
 #include <map>
 #include <fstream>
 #include <unistd.h>
@@ -110,6 +111,86 @@ namespace dg{
 		}
 		return 0;
 	}
+    
+        
+    int loadItems(){
+        xml_document itemsDB;
+        
+        string path = string(curDir,filelen);
+        string ppath = path.substr(0,path.find_last_of("\\/")) + "/data/item_defs/main_item_def.xml";
+        wstring widestr = std::wstring(ppath.begin(), ppath.end());
+        const wchar_t* widecstrpath = widestr.c_str();
+        //cout<<ppath<<endl;
+
+        if (!itemsDB.load_file(widecstrpath)){
+            cout<<"ITEM FILE MISSING, itemdefs not found"<<endl;
+            return 1;
+        }
+
+        xml_node events = itemsDB.child("ItemDef");
+        for (xml_node_iterator it = events.begin(); it != events.end(); ++it)
+        {
+            string itemhandle = it->attribute("Name").value();
+            //item* itemtemplate = NULL;
+            cout << it->name()<< " | " << it->attribute("Name").value();
+            string itemtype = it->name();
+            xml_node action_node = it->child("action");
+            action* act = NULL;
+            if(action_node){
+                //This could have been a map, but, too much work and crunching rn, so, NO :D
+                xml_node specific_action_node = *action_node.begin();
+                string actiontype = specific_action_node.name();
+                cout<<endl<<actiontype;
+                if(actiontype=="apply_status"){
+                    map<string,string> arguments;
+                    xml_node status_node = *(++(specific_action_node.begin()));
+                    arguments.insert({"status_type",status_node.name()});
+                    xml_attribute duration_attr = status_node.attribute("Duration");
+                    if(duration_attr){
+                        string duration=duration_attr.value();
+                        arguments.insert({"duration",duration});
+                    }
+                    string val = status_node.text().get();
+                    arguments.insert({"value",val});
+                    act = new apply_status(arguments);
+                    //cout<<endl<<duration;
+                }
+            }
+            list<modifier*> modifiers;
+            xml_node modifier_node = it->child("modifiers");
+            if(modifier_node){
+                for(xml_node_iterator mit = modifier_node.begin();mit!=modifier_node.end();++mit){
+                    modifiers.push_back(new modifier(mit->name(),mit->text().get()));
+                }
+            }
+            list<string> tags;
+            xml_node tag_node = it->child("tags");
+            if(tag_node){
+                
+            }
+            tags.push_back(itemtype);
+            //modifiers.push_back(new modifier("placeholder",-1));
+            if(itemtype=="Consumable"){
+                item* consumabletemplate = new consumable(itemhandle,act,modifiers,tags);
+                consumabletemplate->setistemplate(true);
+
+                ITEMDB.insert({itemhandle,consumabletemplate});
+            }
+            if(itemtype=="Equipment"){
+                item* generaltemplate = new item(itemhandle,act,modifiers,tags);
+                generaltemplate->setistemplate(true);
+
+                ITEMDB.insert({itemhandle,generaltemplate});
+            }
+
+            
+            cout << endl;
+        }
+
+        cout << endl;
+        return 0;
+    
+    }
     int loadEvents(){
         xml_document eventDB;
         
@@ -154,6 +235,9 @@ namespace dg{
 		if(spriteloopthrough()){
 			return 1;
 		}
+        if(loadItems()){
+            return 1;
+        }
         return 0;
     }
 

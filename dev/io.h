@@ -63,6 +63,8 @@ namespace dg{
 			int ismasked(int relx, int rely);
 			int getx();
 			int gety();
+			int getsizex();
+			int getsizey();
 			//int getvariant();
 		protected:
 			int x,y;
@@ -111,10 +113,15 @@ namespace dg{
 			void setloc(int,int);
 			void destruct();
 			// set the screen to center
-			void setcenter(bool);
-			bool iscenter();
+			void setcenter(bool, bool);
+			bool iscenterx();
+			bool iscentery();
 			string gethandle();
 			map<string,interface_element*> getiemap();
+			int getx();
+			int gety();
+			int getsizey();
+			int getsizex();
 		protected:
 			//if the screen is currently (or entirely) controllable, if not, the screen plays automatically, enabling animations and such
 			//at default it is set to be true
@@ -126,7 +133,10 @@ namespace dg{
 			map<string,interface_element*> iemap;
 			list<string> iestack;
 			bool opaque = false;
-			bool center = false;
+			bool center_x = false;
+			bool center_y = false;
+			int size_x, size_y;
+			//bool center = false;
 			//bool bold;
 			
 	};

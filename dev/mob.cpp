@@ -1,9 +1,14 @@
 #include <iostream>
 #include "mob.h"
+//#include "items.h"
 #include <map>
 #include <string>
 #include <vector>
-
+#include "databases.h"
+#include "uielements.h"
+#include "screens.h"
+#include <ncurses.h>
+#include <algorithm>
 using namespace std;
 using namespace dg;
 namespace dg{
@@ -12,7 +17,7 @@ namespace dg{
 	use of this function
 	input of this function
 	output of this function*/
-
+	
 
 	/* modifier for converting abilities to the chance of success rate.
 	input is the number u want to convert e.g modifier_covert[3]
@@ -90,43 +95,51 @@ namespace dg{
 	/*setting the base value of a mob and its name
 	the name, base health, base armor, base agility, base presence, base strength, base toughness of the mob is input
 	the protected member of the class mob is output*/
-	mob::mob(string nm, int hp, int ac, int ag, int pr, int st, int tn){
-		name = nm;
-		base_hp = hp;
-		base_ac = ac;
+	mob::mob(string hd, int ag, int pr, int st, int tn){
+		if(MOBDB.count(hd)){
+			int handle_mod_id = 0;
+			while(MOBDB.count(hd+string("_")+to_string(handle_mod_id))){
+				handle_mod_id += 1;
+			}
+			hd += string("_")+to_string(handle_mod_id);
+		}
+		handle=hd;
+		MOBDB.insert({handle,this});
 		attr.agility = ag;
 		attr.presence = pr;
 		attr.strength = st;
 		attr.toughness = tn;
+		hitpoint = getmaxhitpoint();
 	}
-
-	/*print out the stats of the mob
-	input is the mob's basic value and name
-	output is the mob's basic value and name in the format of:
-	===mob's name===
-	HP: mob's base health AC: mob's base armor
-	Agility: mob's agility (modifier for agility)
-	Strength: mob's strength (modifier for strength)
-	Presence: mob's presence (modifier for presence)
-	Toughness: mob's toughness (modifier for toughness)*/
-	void mob::cout_stats(){
-		cout<<"==="<<name<<"==="<<endl;
-		cout<<"HP: "<<base_hp<<" AC: "<<base_ac<<endl;
-		cout<<"Agility: "<<attr.agility<<" ("<<attr.getAgilityMod()<<")"<<endl;
-		cout<<"Strength: "<<attr.strength<<" ("<<attr.getStrengthMod()<<")"<<endl;
-		cout<<"Presence: "<<attr.presence<<" ("<<attr.getPresenceMod()<<")"<<endl;
-		cout<<"Toughness: "<<attr.toughness<<" ("<<attr.getToughnessMod()<<")"<<endl;
+	mob::~mob(){
+		MOBDB.erase(handle);
+		for(status_effect* se: active_statuses){
+			delete(se);
+		}
+        list<item*> itemstorem;
+        for(pair<string,item*> i: inventory){
+            itemstorem.push_back(i.second);
+        }
+        for(item* i: itemstorem){
+            delete(i);
+        }
 	}
+	int mob::getcurrenthitpoint(){
+        if(hitpoint>getmaxhitpoint())hitpoint=getmaxhitpoint();
+		return hitpoint;
+	}
+	int mob::getmaxhitpoint(){
+		return (getmodtoughness())<<3;
+		
+	}
+	list<status_effect*>* mob::getstatuslist(){return &active_statuses;}
+	void mob::modifyhitpoint(int amount){
+		if((hitpoint+amount)<=0){hitpoint=0;dead();return;}
+		int max = getmaxhitpoint();
+		if((hitpoint+amount)>max){hitpoint=max;return;}
+		hitpoint+=amount;
+	} 
 	
-	/*get the mob's protected member without declaring derived classes or child classes
-	intput is the corresponding protected member from mob
-	output is the member but not protected*/
-	int mob::mobbase_hp(){
-		return base_hp;
-	}
-	int mob::mobbase_ac() {
-		return base_ac;
-	}
 	int mob::mobagility() {
 		return attr.agility;
 	}
@@ -139,172 +152,247 @@ namespace dg{
 	int mob::mobtoughness() {
 		return attr.toughness;
 	}
+	string mob::gethandle(){return handle;}
+	void mob::dead(){
+	}
 
-	/*get the max health of the mob
-	input is the base health of mob, health and toughness of elements in equipment list eq
-	output is  the max health calculated*/
-	int mob::getmaxhealth() {
-		int maxhealth = base_hp;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxhealth += eqlist[i].equipbase_hp() + (modifier_convert[eqlist[i].equiptoughness()]) * 10;
+    void mob::additem(string itemname){
+        item* itemtemplate = ITEMDB[itemname];
+        if(itemtemplate){
+            item* itemtoadd = itemtemplate->copy();
+            itemtoadd->setowner(this);
+            itemtoadd->setinventory(&inventory);
+
+		    if(inventory.count(itemname)){
+			    int handle_item_id = 0;
+			    while(inventory.count(itemname+string("_")+to_string(handle_item_id))){
+				    handle_item_id += 1;
+			    }
+			    itemname += string("_")+to_string(handle_item_id);
+		    }
+            inventory.insert({itemname,itemtoadd});
+            itemtoadd->setinventoryhandle(itemname);
+        }
+    }
+
+    map<string,item*>* mob::getinventory(){return &inventory;}
+    list<string>* mob::getequipments(){return &equipments;}
+    void mob::addstatus(status_effect* s){active_statuses.push_back(s);}
+    list<modifier*> mob::gettotalmodifiers(){
+        list<modifier*> total_modifiers;
+        for(modifier* mod: inherent_modifiers){
+            total_modifiers.push_back(mod);
+        }
+        for(string equipment_handle: equipments){
+            item* equipment = inventory[equipment_handle];
+            for(modifier* mod: *equipment->getmodifiers()){
+                total_modifiers.push_back(mod);
+            }
+        }
+        return total_modifiers;
+    }
+    int mob::getmodagility(){
+        int agil = attr.agility;
+        list<modifier*> total_modifiers = gettotalmodifiers();
+        for(modifier* mod: total_modifiers){
+            if(mod->type=="agility")agil+=stoi(mod->val);
+        }
+        return agil;
+    }
+
+    int mob::getmodpresence(){
+        int prec = attr.presence;
+        list<modifier*> total_modifiers = gettotalmodifiers();
+        for(modifier* mod: total_modifiers){
+            if(mod->type=="presence")prec+=stoi(mod->val);
+        }
+        return prec;
+    }
+	
+    int mob::getmodstrength(){
+        int str = attr.strength;
+        list<modifier*> total_modifiers = gettotalmodifiers();
+        for(modifier* mod: total_modifiers){
+            if(mod->type=="strength")str+=stoi(mod->val);
+        }
+        return str;
+    }
+
+    int mob::getmodtoughness(){
+        int tgh = attr.toughness;
+        list<modifier*> total_modifiers = gettotalmodifiers();
+        for(modifier* mod: total_modifiers){
+            if(mod->type=="toughness")tgh+=stoi(mod->val);
+        }
+        return tgh;
+    }
+
+    
+
+    void mob::equip(string inventory_handle){
+        bool found = (std::find(equipments.begin(), equipments.end(), inventory_handle) != equipments.end());
+        if(inventory.count(inventory_handle)&&!found){
+            equipments.push_back(inventory_handle);
+        }
+    }
+
+    void mob::airound(){
+        list<status_effect*>* active_statuses = getstatuslist();
+        list<status_effect*> ticks;
+        for(status_effect* s: *active_statuses){
+            ticks.push_back(s);
+        }
+        for(status_effect* s: ticks){
+            s->tick();
+        }
+    }
+	//===ITEMS===
+    
+    //STAT
+    string status_effect::getname(){return name;}
+    int status_effect::getduration(){return duration;}
+    int status_effect::getvalue(){return value;}
+	status_effect::status_effect(string nm, mob* hst,int dur, int val){
+		name = nm;
+        host = hst;
+		duration = dur;
+		value = val;
+
+	}
+	status_effect::~status_effect(){
+		host->getstatuslist()->remove(this);
+	}
+	void status_effect::tick(){
+		duration--;
+		if(duration==0){delete(this);return;}
+        if(duration<0){duration=-1;return;}
+	}
+    
+	void heal::tick(){
+		host->modifyhitpoint(value);
+		status_effect::tick();
+	}
+	action::action(map<string, string> args){
+		for(pair<string, string>p: args){
+			arguments.insert(p);
 		}
-		return maxhealth;
+	}
+	int action::trigger(mob* actor){return 1;}
+	int apply_status::trigger(mob* actor){
+		//all apply statuses should only be used on mobs
+        string ds_handle = "temp_status_apply_target_selection_string";
+        string selector_handle = "temp_status_apply_target_selector";
+		new dynamicstring(ds_handle,"Cancel");
+        int tempexit = 0;
+        list<string> mobsinscene;
+        for(pair<string,mob*> p: MOBDB){
+            mobsinscene.push_back(p.first);
+        }
+        dynamic_string_selector* triggerselect= new dynamic_string_selector(selector_handle,ds_handle,mobsinscene,0,20,16,10);
+        while(!tempexit){
+            if(!ACTIVESCREENS.count(selector_handle))break;
+            triggerselect->print();
+            
+		    int exec_code = 0;
+    		while(!exec_code){
+    			screen* current_control_screen = triggerselect;
+    			int input = 0;	
+    			if(current_control_screen->getcontrollable()){
+    				input = getch();
+    			}
+
+    			exec_code = current_control_screen->execute(input);
+    		}
+        }
+
+        int val = 0;
+        if(arguments.count("value")){
+            val = stoi(arguments["value"]);
+        }
+        int dur = -1;
+        if(arguments.count("duration")){
+            dur = stoi(arguments["duration"]);
+        }
+        string target_handle = VALDB[ds_handle]->getstring();
+        if(arguments.count("status_type")&&MOBDB.count(target_handle)){
+            string status_type = arguments["status_type"];
+            if(status_type=="heal"){
+                heal* h = new heal("Heal",MOBDB[target_handle],dur,val);
+                MOBDB[target_handle]->addstatus(h);
+            }
+            return 1;
+        }
+        delete(VALDB[ds_handle]);
+        return 0;
 	}
 
-	/*get the max ac of the mob
-	input is the base ac of mob, health and agility of elements in equipment list eq
-	output is  the max ac calculated*/
-	int mob::getmaxac() {
-		int maxac = base_ac;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxac += eqlist[i].equipbase_ac() + (modifier_convert[eqlist[i].equipagility()]) * 10;
-		}
-		return maxac;
-	}
+    //modifier
+    modifier::~modifier(){
+        if(parentlist){parentlist->remove(this);}
+    }
+    modifier::modifier(string tp, string vl){
+        type = tp;
+        val = vl;
+    }
+    
+    //ITEM
+    void item::setinventory(map<string,item*>* pi){parentinventory=pi;}    
+    void item::setowner(mob* ownr){owner=ownr;}
+    void item::setinventoryhandle(string ih){inventory_handle=ih;}
+    void item::setistemplate(bool ist){istemplate=ist;}
+    list<modifier*>* item::getmodifiers(){return &modifiers;}
+    string item::getname(){return name;}
+    string item::getinventoryhandle(){return inventory_handle;}
+    
+    item* item::copy(){
+        //if(!act) item(name,modifiers,tags); 
+        return new item(name,act,modifiers,tags);
+    }
+    int item::use(){
+        if(act)return act->trigger(owner);
+        return 0;
+    }
+    bool item::usable(){return act;}
+    /*item::item(string nm,list<modifier*> modis, list<string> tagg){
+        name = nm;
+        //act = acti;
+    }*/
+    item::item(string nm, action* acti, list<modifier*>modis, list<string> tagg){
+        name = nm;
+        act = acti;
 
-	/*get the max agility of the mob
-	input is the base agility of mob and elements in equipment list eq
-	output is  the max agility calculated*/
-	int mob::getmaxagility() {
-		int maxagility = attr.agility;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxagility += eqlist[i].equipagility();
-		}
-		return maxagility;
-	}
+        for(modifier* m: modis){
+            modifiers.push_back(m);
+            m->parentlist = &modifiers;
+        }
+        for(string s: tagg){
+            tags.push_back(s);
+        }
+    }
+    item::~item(){
+        if(istemplate)delete(act);
+        list<modifier*> delmods;
+        for(modifier* mod: modifiers){
+            delmods.push_back(mod);
+        }
+        for(modifier* dmod: delmods){
+            delete(dmod);
+        }
+        if(parentinventory){parentinventory->erase(inventory_handle);}
+    }
+    
+    //consumable
+    item* consumable::copy(){
+        //if(!act)return new consumable(name,modifiers,tags);
+        return new consumable(name,act,modifiers,tags);
+    };
 
-	/*get the max strength of the mob
-	input is the base strength of mob and elements in equipment list eq
-	output is  the max strength calculated*/
-	int mob::getmaxstrength() {
-		int maxstrength = attr.strength;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxstrength += eqlist[i].equipstrength();
-		}
-		return maxstrength;
-	}
-
-	/*get the max presence of the mob
-	input is the base strength of mob and elements in equipment list eq
-	output is  the max strength calculated*/
-	int mob::getmaxpresence() {
-		int maxpresence = attr.presence;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxpresence += eqlist[i].equippresence();
-		}
-		return maxpresence;
-	}
-
-	/*get the max toughness of the mob
-	input is the base toughness of mob and elements in equipment list eq
-	output is  the max toughness calculated*/
-	int mob::getmaxtoughness() {
-		int maxtoughness = attr.toughness;
-		for (int i = 0; i < eqlist.size(); i++) {
-			maxtoughness += eqlist[i].equiptoughness();
-		}
-		return maxtoughness;
-	}
-
-	/*setting the base value of an equipment and its name
-	the name, base health, base armor, base agility, base presence, base strength, base toughness of the equipment is input
-	the protected content of the equipment is output */
-	equipment::equipment(string nm, int hp, int ac, int ag, int pr, int st, int tn) {
-		eqname = nm;
-		eqbase_hp = hp;
-		eqbase_ac = ac;
-		eqattr.agility = ag;
-		eqattr.presence = pr;
-		eqattr.strength = st;
-		eqattr.toughness = tn;
-	}
-
-	/*print out the stats of the equipment
-	input is the equipment's basic value and name
-	output is the equipment's basic value and name in the format of:
-	===equipment's name===
-	HP: equipment's base health AC: equipment's base armor
-	Agility: equipment's agility (modifier for agility)
-	Strength: equipment's strength (modifier for strength)
-	Presence: equipment's presence (modifier for presence)
-	Toughness: equipment's toughness (modifier for toughness)*/
-	void equipment::cout_eqstats() {
-		cout << "===" << eqname << "===" << endl;
-		cout << "Added HP: " << eqbase_hp << "Added AC: " << eqbase_ac << endl;
-		cout << "Added Agility: " << eqattr.agility << " (" << eqattr.getAgilityMod() << ")" << endl;
-		cout << "Added Strength: " << eqattr.strength << " (" << eqattr.getStrengthMod() << ")" << endl;
-		cout << "Added Presence: " << eqattr.presence << " (" << eqattr.getPresenceMod() << ")" << endl;
-		cout << "Added Toughness: " << eqattr.toughness << " (" << eqattr.getToughnessMod() << ")" << endl;
-	}
-
-	/*get the equipment's protected member without declaring derived classes or child classes
-	intput is the corresponding protected member from equipment
-	output is the member but not protected*/
-	string equipment::equipname() {
-		return eqname;
-	}
-	int equipment::equipbase_hp() {
-		return eqbase_hp;
-	}
-	int equipment::equipbase_ac() {
-		return eqbase_ac;
-	}
-	int equipment::equipagility() {
-		return eqattr.agility;
-	}
-	int equipment::equipstrength() {
-		return eqattr.strength;
-	}
-	int equipment::equippresence() {
-		return eqattr.presence;
-	}
-	int equipment::equiptoughness() {
-		return eqattr.toughness;
-	}
-
-
-	//add the equipment stats with mobs stats
-	void equipment::use(mob* target) {
-		/*
-		old use function, u can just use target->mobbase_hp() to get target.base_hp value
-		cout << target->mobbase_hp() + eqbase_hp;
-		cout << target->mobbase_ac() + eqbase_ac;
-		cout << target->mobagility() + eqattr.agility;
-		cout << target->mobpresence() + eqattr.presence;
-		cout << target->mobstrength() + eqattr.strength;
-		cout << target->mobtoughness() + eqattr.toughness;
-		*/
-	}
+    int consumable::use(){
+        int used = item::use();
+        if(used)delete(this);
+        return used;
+    }
 
 }
 
-/*
-for testing only
 
-
-int main(void){
-	mob goblin1("Goblin 1",10,8,16,3,10,9);
-	goblin1.cout_stats();
-	cout << goblin1.mobagility();
-
-
-	mob goblin2("Goblin 2" ,20,16,16,6,20,9);
-	goblin2.cout_stats();
-
-	equipment leather1("Leather armor", 100, 10, 2, 2, 2, 2);
-	leather1.cout_eqstats();
-
-	equipment leather2("Leather armor", 200, 10, 2, 3, 2, 2);
-
-	equipment leather3("Leather armor", 300, 10, 2, 3, 2, 2);
-
-	goblin1.eqlist.push_back(leather1);
-	goblin1.eqlist.push_back(leather2);
-	cout << goblin1.getmaxhealth();
-	cout << goblin1.result_ac;
-
-
-
-	return 0;
-}
-*/
