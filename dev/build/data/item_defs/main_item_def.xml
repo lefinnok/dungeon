@@ -115,5 +115,79 @@
             <appendage>torse</appendage>
         </modifiers>
     </Equipment>
+    
+    <Equipment Name="makeshift_dagger">
+        <action>
+            <agility_attack>
+                <target>mob</target>
+                <damage_roll>1d4</damage_roll>
+            </agility_attack>
+        </action>
+        <modifiers>
+            <appendage>hand</appendage>
+        </modifiers>
+        <tags>
+            <weapon></weapon>
+            <melee></melee>
+        </tags>
+    </Equipment>
+    
+    <Spell Name="rotting_mist">
+        <action>
+            <spell_cast>
+                <target>mob</target>
+                <damage_roll>1d3</damage_roll>
+            </spell_cast>
+        </action>
+        <modifiers>
+            <spell_apply_status>rot,2</spell_apply_status>
+        </modifiers>
+    </Spell>
+
+    <Spell Name="strike">
+        <action>
+            <spell_cast>
+                <target>mob</target>
+                <damage_roll>1d5</damage_roll>
+            </spell_cast>
+        </action>
+    </Spell>
+
+    <Spell Name="shoot">
+        <action>
+            <spell_cast>
+                <target>mob</target>
+                <damage_roll>1d5</damage_roll>
+            </spell_cast>
+        </action>
+    </Spell>
+
+    <Spell Name="stab">
+        <action>
+            <spell_cast>
+                <target>mob</target>
+                <damage_roll>1d2</damage_roll>
+            </spell_cast>
+        </action>
+    </Spell>
+    
+    <Equipment Name="ironhelm">
+        <modifiers>
+            <agility>1</agility>
+            <toughness>1</toughness>
+            <incoming_damage>2</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+    </Equipment>
+
+    <Equipment Name="cloak">
+        <modifiers>
+            <agility>2</agility>
+            <toughness>-2</toughness>
+            <incoming_damage>-3</incoming_damage>
+            <appendage>torse</appendage>
+        </modifiers>
+    </Equipment>
+
 
 </ItemDef>
